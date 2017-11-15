@@ -133,7 +133,7 @@ do
     #----------------------------------------------
   
     mkdir -p $iFile                   # iFile = directory with trimmed ntuple names
-    cp $runCond $iFile             # copy cond submit script to iFile
+    cp $runCond $iFile                # copy cond submit script to iFile
     cp runAnalysis.sh $iFile          # pass the argument script (for LineNumber, doQC, syst and dir) 
     cd $iFile                         # cd to iFile
     sed -i "s:LINENUM:$lineNum:g" $runCond   # dictate which file to process
@@ -142,6 +142,10 @@ do
     then
       for ii in {0..3}
       do
+        echo $ii
+        runCondCopy=$runCond/.sub/""
+        runCondCopy=$runcCondCopy"_Copy.sub"
+        cp $runCond $runCondCopy
         sed -i "s:DOQCD:$ii:g" $runCond   # passed doQCD 
         sed -i "s:SYSTEMATICS:$allSystematics:g" $runCond
         sed -i "s:DIRECTION:$allDirection:g" $runCond 
@@ -150,6 +154,7 @@ do
         cp $runCond $runCondSpecific
         echo "condor submit stage 1"
         condor_submit $runCondSpecific ###this is already properly indented
+        cp $runCondCopy $runCond
       done
     elif [ -z "$systematics" ] && [ -z "$direction" ]
     then
