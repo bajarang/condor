@@ -142,7 +142,6 @@ do
     then
       for ii in {0..3}
       do
-        echo $ii
         runCondCopy=$runCond/.sub/""
         runCondCopy=$runcCondCopy"_Copy.sub"
         cp $runCond $runCondCopy
