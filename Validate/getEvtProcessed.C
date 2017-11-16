@@ -1,30 +1,22 @@
 /*
- * This code opens histograms inside the root files for Data and Bkgd and 
- * SignalMC separately and reads the total number of events
- *
- *
+ * This code opens histograms inside the root files for Data 
+ * and Bkgd and SignalMC separately and reads the total number 
+ * of events
  */
 
-#include "TROOT.h"    
-#include "TObject.h"
-#include "TFile.h"
-#include "TTree.h"
-#include "TROOT.h"
-#include <cmath>
-#include <math.h>
-#include<string>
-#include <TH2.h>
-#include <TStyle.h>
-#include <TCanvas.h>
-#include <math.h>
-#include <fstream>
-#include <map>
-#include <iomanip>
 #include <iostream>
+#include <fstream>
+using namespace std;
 
-//void getEvtProcessed(){
 int main(){
-  //Open 
+  //Open procNtuples.log file and individual filenames
+  string strProcNtuplesDir="/home/bsutar/t3store/Asym2016-8TeV/Results/HistoFiles/wplus/CENTRAL/trial/";
+  string readFileNameFrom="procNtuples.log";
+  
+  ifstream infile(readFileNameFrom.c_str());
 
+  for(){
+
+  }
 }
 
