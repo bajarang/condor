@@ -2,12 +2,11 @@
  * This code performs following simple tasks :
  * 1. First it checks if the proper arguments are passed or not (its basically a line number)
  * 2. Then it opens and reads that particular line in the Input_DB_Summary.txt file
- * 3. It then generates the names of output histogram files
- * 4. It then checks if the generated names match with the actually created files with condor
- * 5. It outputs if the check is successful or some files are not created
- * 6. If some files are not created, it tells how to generate them and exits
- * 7. Only when the match is complete, it opens each created histogram files and reads the entries of NVtx histogram
- * 8. It outputs the total number of events for created and actually existing files
+ * 3. It then generates the names of output histogram files and saves those locally
+ * -----------------------------------------------------------------------------
+ * compile like this : g++ validateGeneratedOutput.cc -o validateGeneratedOutput
+ * Use like this     : ./validateGeneratedOutput 1 
+ * -----------------------------------------------------------------------------
  */
 
 #include <iostream>
@@ -48,7 +47,7 @@ int main(int argc, char* argv[]){
 
   // Part 2.
   //////////////Begin reading the db file///////////////////////////////////////////
-  ifstream inputFile("Input_DB_Summary.txt");
+  ifstream inputFile("../Input_DB_Summary.txt");
   string strdoWhat, strCI, strTotEvents, strEvents, strPartition, strCurretPar, strFileName;
   vector<string> filePath;
   stringstream strStreamFileName;
@@ -69,12 +68,9 @@ int main(int argc, char* argv[]){
   fileName = filePath.at(counter); 
   
   cout << "--> Reading Input Ntuple file : " << fileName << endl << endl;
- 
+  
   // Part 3.
   ////////////////////generate names of the output files/////////////////////// 
-  /* It should look like this filename :
-  ** SMu_8TeV_Data_dR_5311_00001_EffiCorr_0_TrigCorr_0_Syst_0_CN_JetPtMin_30_VarWidth_BVeto_QCD3_MET15_mT50.root
-  */
  
   // 1. trim the extension .root
   size_t found;
@@ -89,10 +85,11 @@ int main(int argc, char* argv[]){
   stringstream endAppendString;
   midAppendString << "_JetPtMin_30_VarWidth_BVeto_QCD";
   endAppendString << "_MET15_mT50.root";
+
   // 3. add EffiCorr and TrigCorr based on Data or MC
   if(trimmedFileName.find("_Data_")!=string::npos) {
     beginAppendString << "_EffiCorr_0";
-    beginAppendString << "_TrigCorr_0";
+    beginAppendString << "_TrigCorr_1";
   }
   else {
     beginAppendString << "_EffiCorr_1";
@@ -111,20 +108,14 @@ int main(int argc, char* argv[]){
   short wjSyst[NSystWJets]   = {0, 1, 1,    3,    3,  5, 5, 6, 6, 7, 7, 4, 4, 8, 9, 10, 11, 11};
   short wjDir[NSystWJets]    = {0,-1, 1,   -1,    1, -1, 1,-1, 1,-1, 1,-1, 1, 1, 1,  1,  1, -1};
 
-  short bgSyst[NSystBkgd]      = {0, 1, 1,    3,    3,  5, 5, 6, 6, 7, 7, 8};
-  short bgDir[NSystBkgd]       = {0,-1, 1,   -1,    1, -1, 1,-1, 1,-1, 1, 1};
+  short bgSyst[NSystBkgd]    = {0, 1, 1,    3,    3,  5, 5, 6, 6, 7, 7, 8};
+  short bgDir[NSystBkgd]     = {0,-1, 1,   -1,    1, -1, 1,-1, 1,-1, 1, 1};
 
   /////////////////save the generate histogram filenames in a separate file////////////////
-  string makeDir = "mkdir -p ";
-  string strSaveDir = "/grid_mnt/t3storage2/bsutar/ExpectedFileNames/";
-  cout << makeDir+strSaveDir << endl;
-
-  system((makeDir+strSaveDir).c_str());
-
   string strSaveGeneratedFileNames;  
   strSaveGeneratedFileNames = "ExpectedFiles_";
 
-  strSaveGeneratedFileNames = strSaveDir + strSaveGeneratedFileNames + strLineNum.str() + ".log"; 
+  strSaveGeneratedFileNames = strSaveGeneratedFileNames + strLineNum.str() + ".log"; 
   ofstream outfile(strSaveGeneratedFileNames.c_str());
 
   if(trimmedFileName.find("_Data_")!=string::npos) {
