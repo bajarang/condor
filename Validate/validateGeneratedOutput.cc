@@ -113,7 +113,7 @@ int main(int argc, char* argv[]){
 
   /////////////////save the generate histogram filenames in a separate file////////////////
   string strSaveGeneratedFileNames;  
-  strSaveGeneratedFileNames = "ExpectedFiles_";
+  strSaveGeneratedFileNames = "ExpectedFiles/ExpectedFiles_";
 
   strSaveGeneratedFileNames = strSaveGeneratedFileNames + strLineNum.str() + ".log"; 
   ofstream outfile(strSaveGeneratedFileNames.c_str());
