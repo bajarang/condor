@@ -1,3 +1,4 @@
+generateOutputFileNames.sh
 validateGeneratedOutput
 lineUpJobs.sh
 condor_log
