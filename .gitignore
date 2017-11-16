@@ -1,3 +1,4 @@
+validateGeneratedOutput
 lineUpJobs.sh
 condor_log
 condor_out
