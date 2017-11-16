@@ -1,5 +1,5 @@
 Validate/generateOutputFileNames.sh
-Validate/ExpectedFiles_*.log
+Validate/ExpectedFiles
 validateGeneratedOutput
 lineUpJobs.sh
 condor_log
