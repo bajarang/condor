@@ -16,10 +16,12 @@
 #include <cstdlib> 
 #include <vector>
 #include <algorithm>
+#include <stdlib.h>
 using namespace std;
 
 int main(int argc, char* argv[]){
 
+  // Part 1.
   //////////////Exit if not correct number of arguments are passed////////////////////
   if(argc!=2){
     cout << "Please provide the line number to read " << endl;
@@ -44,6 +46,7 @@ int main(int argc, char* argv[]){
     exit(0);
   }
 
+  // Part 2.
   //////////////Begin reading the db file///////////////////////////////////////////
   ifstream inputFile("Input_DB_Summary.txt");
   string strdoWhat, strCI, strTotEvents, strEvents, strPartition, strCurretPar, strFileName;
@@ -67,6 +70,7 @@ int main(int argc, char* argv[]){
   
   cout << "--> Reading Input Ntuple file : " << fileName << endl << endl;
  
+  // Part 3.
   ////////////////////generate names of the output files/////////////////////// 
   /* It should look like this filename :
   ** SMu_8TeV_Data_dR_5311_00001_EffiCorr_0_TrigCorr_0_Syst_0_CN_JetPtMin_30_VarWidth_BVeto_QCD3_MET15_mT50.root
@@ -110,62 +114,72 @@ int main(int argc, char* argv[]){
   short bgSyst[NSystBkgd]      = {0, 1, 1,    3,    3,  5, 5, 6, 6, 7, 7, 8};
   short bgDir[NSystBkgd]       = {0,-1, 1,   -1,    1, -1, 1,-1, 1,-1, 1, 1};
 
+  /////////////////save the generate histogram filenames in a separate file////////////////
+  string makeDir = "mkdir -p ";
+  string strSaveDir = "/grid_mnt/t3storage2/bsutar/ExpectedFileNames/";
+  cout << makeDir+strSaveDir << endl;
+
+  system((makeDir+strSaveDir).c_str());
+
+  string strSaveGeneratedFileNames;  
+  strSaveGeneratedFileNames = "ExpectedFiles_";
+
+  strSaveGeneratedFileNames = strSaveDir + strSaveGeneratedFileNames + strLineNum.str() + ".log"; 
+  ofstream outfile(strSaveGeneratedFileNames.c_str());
+
   if(trimmedFileName.find("_Data_")!=string::npos) {
     for(int i=0; i<NSystData; i++){
       cout << dataSyst[i] << "  " << dataDir[i] << endl;
-      if (dataDir[i] ==0){
-        for(int j=0; j<4; j++){
-          cout << trimmedFileName << beginAppendString.str() << "_Syst_" << dataSyst[i] << "_CN" << midAppendString.str() << j << endAppendString.str() << endl;
+      for(int j=0; j<4; j++){
+        if (dataDir[i] == 0){
+          cout    << trimmedFileName << beginAppendString.str() << "_Syst_" << dataSyst[i] << "_CN" << midAppendString.str() << j << endAppendString.str() << endl;
+          outfile << trimmedFileName << beginAppendString.str() << "_Syst_" << dataSyst[i] << "_CN" << midAppendString.str() << j << endAppendString.str() << endl;
         }
-      }
-      if (dataDir[i] > 0){
-        for(int j=0; j<4; j++){
-          cout << trimmedFileName << beginAppendString.str() << "_Syst_" << dataSyst[i] << "_UP" << midAppendString.str() << j << endAppendString.str() << endl;
+        else if (dataDir[i] > 0){
+          cout    << trimmedFileName << beginAppendString.str() << "_Syst_" << dataSyst[i] << "_UP" << midAppendString.str() << j << endAppendString.str() << endl;
+          outfile << trimmedFileName << beginAppendString.str() << "_Syst_" << dataSyst[i] << "_UP" << midAppendString.str() << j << endAppendString.str() << endl;
         }
-      }
-      if (dataDir[i] < 0){
-        for(int j=0; j<4; j++){
-          cout << trimmedFileName << beginAppendString.str() << "_Syst_" << dataSyst[i] << "_DN" << midAppendString.str() << j << endAppendString.str() << endl;
+        else {
+          cout    << trimmedFileName << beginAppendString.str() << "_Syst_" << dataSyst[i] << "_DN" << midAppendString.str() << j << endAppendString.str() << endl;
+          outfile << trimmedFileName << beginAppendString.str() << "_Syst_" << dataSyst[i] << "_DN" << midAppendString.str() << j << endAppendString.str() << endl;
         }
       }
     }
   }
   else if(trimmedFileName.find("_WJetsALL_")!=string::npos) {
     for(int i=0; i<NSystWJets; i++){
-      cout << i << "  " << wjSyst[i] << "  " << wjDir[i] << endl;
-      if (wjDir[i] ==0){
-        for(int j=0; j<4; j++){
-          cout << trimmedFileName << beginAppendString.str() << "_Syst_" << wjSyst[i] << "_CN" << midAppendString.str() << j << endAppendString.str() << endl;
+      cout << wjSyst[i] << "  " << wjDir[i] << endl;
+      for(int j=0; j<4; j++){
+        if (wjDir[i] == 0){
+          cout    << trimmedFileName << beginAppendString.str() << "_Syst_" << wjSyst[i] << "_CN" << midAppendString.str() << j << endAppendString.str() << endl;
+          outfile << trimmedFileName << beginAppendString.str() << "_Syst_" << wjSyst[i] << "_CN" << midAppendString.str() << j << endAppendString.str() << endl;
         }
-      }
-      if (wjDir[i] > 0){
-        for(int j=0; j<4; j++){
-          cout << trimmedFileName << beginAppendString.str() << "_Syst_" << wjSyst[i] << "_UP" << midAppendString.str() << j << endAppendString.str() << endl;
+        else if (wjDir[i] > 0){
+          cout    << trimmedFileName << beginAppendString.str() << "_Syst_" << wjSyst[i] << "_UP" << midAppendString.str() << j << endAppendString.str() << endl;
+          outfile << trimmedFileName << beginAppendString.str() << "_Syst_" << wjSyst[i] << "_UP" << midAppendString.str() << j << endAppendString.str() << endl;
         }
-      }
-      if (wjDir[i] < 0){
-        for(int j=0; j<4; j++){
-          cout << trimmedFileName << beginAppendString.str() << "_Syst_" << wjSyst[i] << "_DN" << midAppendString.str() << j << endAppendString.str() << endl;
+        else {
+          cout    << trimmedFileName << beginAppendString.str() << "_Syst_" << wjSyst[i] << "_DN" << midAppendString.str() << j << endAppendString.str() << endl;
+          outfile << trimmedFileName << beginAppendString.str() << "_Syst_" << wjSyst[i] << "_DN" << midAppendString.str() << j << endAppendString.str() << endl;
         }
       }
     }
   }
-  else  {
+  else {
     for(int i=0; i<NSystBkgd; i++){
-      cout << i << "  " << bgSyst[i] << "  " << bgDir[i] << endl;
-      if (bgDir[i] ==0){
-        for(int j=0; j<4; j++){
-          cout << trimmedFileName << beginAppendString.str() << "_Syst_" << bgSyst[i] << "_CN" << midAppendString.str() << j << endAppendString.str() << endl;
+      cout << bgSyst[i] << "  " << bgDir[i] << endl;
+      for(int j=0; j<4; j++){
+        if (bgDir[i] == 0){
+          cout    << trimmedFileName << beginAppendString.str() << "_Syst_" << bgSyst[i] << "_CN" << midAppendString.str() << j << endAppendString.str() << endl;
+          outfile << trimmedFileName << beginAppendString.str() << "_Syst_" << bgSyst[i] << "_CN" << midAppendString.str() << j << endAppendString.str() << endl;
         }
-      }
-      if (bgDir[i] > 0){
-        for(int j=0; j<4; j++){
-          cout << trimmedFileName << beginAppendString.str() << "_Syst_" << bgSyst[i] << "_UP" << midAppendString.str() << j << endAppendString.str() << endl;
+        else if (bgDir[i] > 0){
+          cout    << trimmedFileName << beginAppendString.str() << "_Syst_" << bgSyst[i] << "_UP" << midAppendString.str() << j << endAppendString.str() << endl;
+          outfile << trimmedFileName << beginAppendString.str() << "_Syst_" << bgSyst[i] << "_UP" << midAppendString.str() << j << endAppendString.str() << endl;
         }
-      }
-      if (bgDir[i] < 0){
-        for(int j=0; j<4; j++){
-          cout << trimmedFileName << beginAppendString.str() << "_Syst_" << bgSyst[i] << "_DN" << midAppendString.str() << j << endAppendString.str() << endl;
+        else {
+          cout    << trimmedFileName << beginAppendString.str() << "_Syst_" << bgSyst[i] << "_DN" << midAppendString.str() << j << endAppendString.str() << endl;
+          outfile << trimmedFileName << beginAppendString.str() << "_Syst_" << bgSyst[i] << "_DN" << midAppendString.str() << j << endAppendString.str() << endl;
         }
       }
     }
