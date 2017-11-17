@@ -28,6 +28,6 @@ def compare(File1,File2):
            f.write(line)
 	   print line
 
-compare("ExpectedFiles_1.log", "procNtuples.log")
+compare("ExpectedFiles/ExpectedFiles_1.log", "procNtuples.log")
 
 
