@@ -39,19 +39,19 @@ int main(int argc, char* argv[]){
   
   map <string, int> mapOfSamplesEntries;  //empty map container
   //insert elements in random order
-  map.insert(pair <string, int> ("_Data_",-1000));
-  map.insert(pair <string, int> ("_TTJets_",-1000));
-  map.insert(pair <string, int> ("_ZZ_",-1000));
-  map.insert(pair <string, int> ("_WZ_",-1000));
-  map.insert(pair <string, int> ("_WW_",-1000));
-  map.insert(pair <string, int> ("_T_s_",-1000));
-  map.insert(pair <string, int> ("_T_t_",-1000));
-  map.insert(pair <string, int> ("_T_tW_",-1000));
-  map.insert(pair <string, int> ("_Tbar_s_",-1000));
-  map.insert(pair <string, int> ("_Tbar_t_",-1000));
-  map.insert(pair <string, int> ("Tbar_tW_",-1000));
-  map.insert(pair <string, int> ("_DYJets10to50_",-1000));
-  map.insert(pair <string, int> ("_WJetsALL_",-1000));
+  mapOfSamplesEntries.insert(pair <string, int> ("_Data_",-1000));
+  mapOfSamplesEntries.insert(pair <string, int> ("_TTJets_",-1000));
+  mapOfSamplesEntries.insert(pair <string, int> ("_ZZ_",-1000));
+  mapOfSamplesEntries.insert(pair <string, int> ("_WZ_",-1000));
+  mapOfSamplesEntries.insert(pair <string, int> ("_WW_",-1000));
+  mapOfSamplesEntries.insert(pair <string, int> ("_T_s_",-1000));
+  mapOfSamplesEntries.insert(pair <string, int> ("_T_t_",-1000));
+  mapOfSamplesEntries.insert(pair <string, int> ("_T_tW_",-1000));
+  mapOfSamplesEntries.insert(pair <string, int> ("_Tbar_s_",-1000));
+  mapOfSamplesEntries.insert(pair <string, int> ("_Tbar_t_",-1000));
+  mapOfSamplesEntries.insert(pair <string, int> ("Tbar_tW_",-1000));
+  mapOfSamplesEntries.insert(pair <string, int> ("_DYJets10to50_",-1000));
+  mapOfSamplesEntries.insert(pair <string, int> ("_WJetsALL_",-1000));
 
   //////////loop for opening each file (containing filenames) here//////////
   for(int fileNum=1; fileNum<=35; fileNum++){
@@ -74,27 +74,33 @@ int main(int argc, char* argv[]){
     //now open each file and read filename 
     ifstream infile(strFileName.c_str());
     
-    for(int lineNum=1; lineNum<=lineCounter; lineNum++){
-    ////for(int lineNum=1; lineNum<2; lineNum++){
+    ////for(int lineNum=1; lineNum<=lineCounter; lineNum++){ ////UNCOMMENT
+    for(int lineNum=1; lineNum<2; lineNum++){
       string strFullFileName;
       infile >> strFullFileName;
-      if(strFullFileName.find("Syst_0_CN_JetPtMin_30_VarWidth_BVeto_QCD0")!=string::npos){
-        strFullFileName = pathOfGeneratedFiles + strFullFileName;
-        cout << strFullFileName << endl;
-        TFile *inrootfile = new TFile(strFullFileName.c_str(),"READ");
-        if(!inrootfile) cout << "Error opening file : " << strFullFileName << endl;
-        if(inrootfile){
-          if (DEBUG) cout << "Opening File : " << strFullFileName << endl;
-          TH1D *h = (TH1D*)inrootfile->Get("NVtx"); 
-          double entries=0.0;
-          entries = entries + h->GetEntries();
-          cout << entries << endl;
-        } 
-        inrootfile->Close();
+      map <string, int> :: iterator itr;
+      for(itr = mapOfSamplesEntries.begin(); itr != mapOfSamplesEntries.end(); itr++){
+        cout << itr->first << "  " << itr->second << endl;
+        /*
+        if(strFullFileName.find("Syst_0_CN_JetPtMin_30_VarWidth_BVeto_QCD0")!=string::npos){
+          strFullFileName = pathOfGeneratedFiles + strFullFileName;
+          cout << strFullFileName << endl;
+          TFile *inrootfile = new TFile(strFullFileName.c_str(),"READ");
+          if(!inrootfile) cout << "Error opening file : " << strFullFileName << endl;
+          if(inrootfile){
+            if (DEBUG) cout << "Opening File : " << strFullFileName << endl;
+            TH1D *h = (TH1D*)inrootfile->Get("NVtx"); 
+            double entries=0.0;
+            entries = entries + h->GetEntries();
+            cout << entries << endl;
+          } 
+          inrootfile->Close();
+        }
+        */
       }
-    }
-  } 
-  
+ 
+    } 
+  }
   return 0;
 
 }
