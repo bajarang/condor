@@ -1,8 +1,8 @@
 /*
  * This code performs three checks
- * 1. Finds out corrupted files (easy check)
- * 2. Finds out empty plots     (easy check)
- * 3. Adds all the events and compares with total (logic needed to add certain set of files)
+ * 1. 
+ * 2. 
+ * 3. 
  */
 
 #define  DEBUG 1
@@ -10,6 +10,8 @@
 #include <fstream>
 #include <sstream>
 #include <stdlib.h> 
+#include <map>
+#include <iterator>
 #include "TFile.h"
 #include "TH1D.h"
 #include "TApplication.h"
@@ -18,7 +20,6 @@ using namespace std;
 
 int main(int argc, char* argv[]){
   
-  // 1. FIND OUT CORRUPTED FILES (EACH CHECK) 
   ////////////Define path of files////////////
   string pathOfGeneratedFiles="/home/bsutar/t3store/Asym2016-8TeV/Results/HistoFiles/wplus/CENTRAL/trial/";  
                     //this is where the output files are stored
@@ -36,6 +37,22 @@ int main(int argc, char* argv[]){
   ///////////quick test over////////////////
   */
   
+  map <string, int> mapOfSamplesEntries;  //empty map container
+  //insert elements in random order
+  map.insert(pair <string, int> ("_Data_",-1000));
+  map.insert(pair <string, int> ("_TTJets_",-1000));
+  map.insert(pair <string, int> ("_ZZ_",-1000));
+  map.insert(pair <string, int> ("_WZ_",-1000));
+  map.insert(pair <string, int> ("_WW_",-1000));
+  map.insert(pair <string, int> ("_T_s_",-1000));
+  map.insert(pair <string, int> ("_T_t_",-1000));
+  map.insert(pair <string, int> ("_T_tW_",-1000));
+  map.insert(pair <string, int> ("_Tbar_s_",-1000));
+  map.insert(pair <string, int> ("_Tbar_t_",-1000));
+  map.insert(pair <string, int> ("Tbar_tW_",-1000));
+  map.insert(pair <string, int> ("_DYJets10to50_",-1000));
+  map.insert(pair <string, int> ("_WJetsALL_",-1000));
+
   //////////loop for opening each file (containing filenames) here//////////
   for(int fileNum=1; fileNum<=35; fileNum++){
                     //change to this full list later
@@ -47,12 +64,12 @@ int main(int argc, char* argv[]){
     string command = "wc -l ";
     string prefixFileName = strFileName + " > counter.txt"; 
     command = command + prefixFileName.c_str();
-    system(command.c_str() ); 
+    system(command.c_str()); 
     ifstream counterFile("counter.txt");
     int lineCounter = 0;
     string lineContent;
     counterFile >> lineCounter >> lineContent; 
-    cout << "There are "<< lineCounter <<  " lines inside : " << strFileName << endl;
+    cout << "There are " << lineCounter <<  " lines inside : " << strFileName << endl;
     counterFile.close();
     //now open each file and read filename 
     ifstream infile(strFileName.c_str());
@@ -70,19 +87,13 @@ int main(int argc, char* argv[]){
           if (DEBUG) cout << "Opening File : " << strFullFileName << endl;
           TH1D *h = (TH1D*)inrootfile->Get("NVtx"); 
           double entries=0.0;
-          entries = h->GetEntries();
+          entries = entries + h->GetEntries();
           cout << entries << endl;
         } 
         inrootfile->Close();
       }
-    } 
+    }
   } 
-  
- 
-  // 2. ADDS ALL THE EVENTS AND COMPARES WITH TOTAL (LOGIC NEEDED TO ADD CERTAIN SET OF FILES)
-  ////////////Explain logic here////////////////
-  // As we have split the ntuples we will have to add up the respective  
-  // nentries histogram for smaller 
   
   return 0;
 
