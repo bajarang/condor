@@ -105,11 +105,11 @@ int main(int argc, char* argv[]){
   short dataSyst[NSystData]  = {0, 2, 2};
   short dataDir[NSystData]   = {0,-1, 1};
   
-  short wjSyst[NSystWJets]   = {0, 1, 1,    3,    3,  5, 5, 6, 6, 7, 7, 4, 4, 8, 9, 10, 11, 11};
-  short wjDir[NSystWJets]    = {0,-1, 1,   -1,    1, -1, 1,-1, 1,-1, 1,-1, 1, 1, 1,  1,  1, -1};
+  short wjSyst[NSystWJets]   = {0, 1, 1, 5, 5, 6, 6, 7, 7, 4, 4, 8, 9, 10, 11, 11};
+  short wjDir[NSystWJets]    = {0,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1, 1,  1,  1, -1};
 
-  short bgSyst[NSystBkgd]    = {0, 1, 1,    3,    3,  5, 5, 6, 6, 7, 7, 8};
-  short bgDir[NSystBkgd]     = {0,-1, 1,   -1,    1, -1, 1,-1, 1,-1, 1, 1};
+  short bgSyst[NSystBkgd]    = {0, 1, 1, 3, 3, 5, 5, 6, 6, 7, 7, 8};
+  short bgDir[NSystBkgd]     = {0,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1};
 
   /////////////////save the generate histogram filenames in a separate file////////////////
   string strSaveGeneratedFileNames;  
