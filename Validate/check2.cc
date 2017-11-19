@@ -68,6 +68,8 @@ int main(int argc, char* argv[]){
  
   // 2. ADDS ALL THE EVENTS AND COMPARES WITH TOTAL (LOGIC NEEDED TO ADD CERTAIN SET OF FILES)
   ////////////Explain logic here////////////////
+  // As we have split the ntuples we will have to add up the respective  
+  // nentries histogram for smaller 
 
   return 0;
 }
