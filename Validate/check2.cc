@@ -89,7 +89,8 @@ int main(int argc, char* argv[]){
           if(!inrootfile) cout << "Error opening file : " << strFullFileName << endl;
           if(inrootfile){
             if (DEBUG) cout << "Opening File : " << strFullFileName << endl;
-            TH1D *h = (TH1D*)inrootfile->Get("NVtx"); 
+            //TH1D *h = (TH1D*)inrootfile->Get("NVtx"); 
+            TH1D *h = (TH1D*)inrootfile->Get("nentries"); 
             if(itr->second == -1 ){
               itr->second = itr->second + h->GetEntries() + 1;
             }
