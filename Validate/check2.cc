@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <iomanip>
 #include <stdlib.h> 
 #include <map>
 #include <iterator>
@@ -35,26 +36,25 @@ int main(int argc, char* argv[]){
   cout << h->GetEntries() << endl;
   exit(0);
   ///////////quick test over////////////////
-  */
-  
+  */ 
+   
   map <string, int> mapOfSamplesEntries;  //empty map container
   //insert elements in random order
-  mapOfSamplesEntries.insert(pair <string, int> ("_Data_",-1000));
-  mapOfSamplesEntries.insert(pair <string, int> ("_TTJets_",-1000));
-  mapOfSamplesEntries.insert(pair <string, int> ("_ZZ_",-1000));
-  mapOfSamplesEntries.insert(pair <string, int> ("_WZ_",-1000));
-  mapOfSamplesEntries.insert(pair <string, int> ("_WW_",-1000));
-  mapOfSamplesEntries.insert(pair <string, int> ("_T_s_",-1000));
-  mapOfSamplesEntries.insert(pair <string, int> ("_T_t_",-1000));
-  mapOfSamplesEntries.insert(pair <string, int> ("_T_tW_",-1000));
-  mapOfSamplesEntries.insert(pair <string, int> ("_Tbar_s_",-1000));
-  mapOfSamplesEntries.insert(pair <string, int> ("_Tbar_t_",-1000));
-  mapOfSamplesEntries.insert(pair <string, int> ("Tbar_tW_",-1000));
-  mapOfSamplesEntries.insert(pair <string, int> ("_DYJets10to50_",-1000));
-  mapOfSamplesEntries.insert(pair <string, int> ("_WJetsALL_",-1000));
-
+  mapOfSamplesEntries.insert(pair <string, int> ("_Data_",-1));
+  mapOfSamplesEntries.insert(pair <string, int> ("_TTJets_",-1));
+  mapOfSamplesEntries.insert(pair <string, int> ("_ZZ_",-1));
+  mapOfSamplesEntries.insert(pair <string, int> ("_WZ_",-1));
+  mapOfSamplesEntries.insert(pair <string, int> ("_WW_",-1));
+  mapOfSamplesEntries.insert(pair <string, int> ("_T_s_",-1));
+  mapOfSamplesEntries.insert(pair <string, int> ("_T_t_",-1));
+  mapOfSamplesEntries.insert(pair <string, int> ("_T_tW_",-1));
+  mapOfSamplesEntries.insert(pair <string, int> ("_Tbar_s_",-1));
+  mapOfSamplesEntries.insert(pair <string, int> ("_Tbar_t_",-1));
+  mapOfSamplesEntries.insert(pair <string, int> ("_Tbar_tW_",-1));
+  mapOfSamplesEntries.insert(pair <string, int> ("_DYJets10to50_",-1));
+  mapOfSamplesEntries.insert(pair <string, int> ("_WJetsALL_",-1));
   //////////loop for opening each file (containing filenames) here//////////
-  for(int fileNum=1; fileNum<=35; fileNum++){
+  for(int fileNum=1; fileNum<=35; fileNum++){ ////UNCOMMENT
                     //change to this full list later
   ////for(int fileNum=1; fileNum<2; fileNum++){
     stringstream strStreamLineNum;
@@ -74,15 +74,15 @@ int main(int argc, char* argv[]){
     //now open each file and read filename 
     ifstream infile(strFileName.c_str());
     
-    ////for(int lineNum=1; lineNum<=lineCounter; lineNum++){ ////UNCOMMENT
+    
+    //for(int lineNum=1; lineNum<=lineCounter; lineNum++) ////UNCOMMENT
     for(int lineNum=1; lineNum<2; lineNum++){
       string strFullFileName;
       infile >> strFullFileName;
       map <string, int> :: iterator itr;
-      for(itr = mapOfSamplesEntries.begin(); itr != mapOfSamplesEntries.end(); itr++){
-        cout << itr->first << "  " << itr->second << endl;
-        /*
-        if(strFullFileName.find("Syst_0_CN_JetPtMin_30_VarWidth_BVeto_QCD0")!=string::npos){
+      
+      for(itr = mapOfSamplesEntries.begin(); itr != mapOfSamplesEntries.end(); ++itr){
+        if(strFullFileName.find(itr->first)!=string::npos && strFullFileName.find("Syst_0_CN_JetPtMin_30_VarWidth_BVeto_QCD0")!=string::npos){
           strFullFileName = pathOfGeneratedFiles + strFullFileName;
           cout << strFullFileName << endl;
           TFile *inrootfile = new TFile(strFullFileName.c_str(),"READ");
@@ -90,17 +90,28 @@ int main(int argc, char* argv[]){
           if(inrootfile){
             if (DEBUG) cout << "Opening File : " << strFullFileName << endl;
             TH1D *h = (TH1D*)inrootfile->Get("NVtx"); 
-            double entries=0.0;
-            entries = entries + h->GetEntries();
-            cout << entries << endl;
-          } 
+            if(itr->second == -1 ){
+              itr->second = itr->second + h->GetEntries() + 1;
+            }
+            else{
+              itr->second = itr->second + h->GetEntries();
+            }
+            cout << itr->first << "  " << itr->second << endl;
+          }
+           
           inrootfile->Close();
         }
-        */
       }
- 
-    } 
+      strFullFileName=""; 
+    }
+     
   }
+  
+  map <string, int> :: iterator itrOut;
+  for(itrOut = mapOfSamplesEntries.begin(); itrOut != mapOfSamplesEntries.end(); ++itrOut){
+    cout << "Final Entries in : " << setw(20) << itrOut->first  << "  =  " << setw(10) << itrOut->second << endl;
+  }
+   
   return 0;
-
+  
 }
