@@ -107,6 +107,25 @@ int main(int argc, char* argv[]){
      
   }
   
+  map <string, int> mapOfOrigSamplesEntries;  //empty map container
+  //insert elements in random order (Insert correct enetries later))
+  mapOfOrigSamplesEntries.insert(pair <string, int> ("_Data_",60000));
+  mapOfOrigSamplesEntries.insert(pair <string, int> ("_TTJets_",60000));
+  mapOfOrigSamplesEntries.insert(pair <string, int> ("_ZZ_",60000));
+  mapOfOrigSamplesEntries.insert(pair <string, int> ("_WZ_",60000));
+  mapOfOrigSamplesEntries.insert(pair <string, int> ("_WW_",60000));
+  mapOfOrigSamplesEntries.insert(pair <string, int> ("_T_s_",60000));
+  mapOfOrigSamplesEntries.insert(pair <string, int> ("_T_t_",60000));
+  mapOfOrigSamplesEntries.insert(pair <string, int> ("_T_tW_",60000));
+  mapOfOrigSamplesEntries.insert(pair <string, int> ("_Tbar_s_",60000));
+  mapOfOrigSamplesEntries.insert(pair <string, int> ("_Tbar_t_",60000));
+  mapOfOrigSamplesEntries.insert(pair <string, int> ("_Tbar_tW_",60000));
+  mapOfOrigSamplesEntries.insert(pair <string, int> ("_DYJets10to50_",60000));
+  mapOfOrigSamplesEntries.insert(pair <string, int> ("_WJetsALL_",60000));
+  
+
+
+
   map <string, int> :: iterator itrOut;
   for(itrOut = mapOfSamplesEntries.begin(); itrOut != mapOfSamplesEntries.end(); ++itrOut){
     cout << "Final Entries in : " << setw(20) << itrOut->first  << "  =  " << setw(10) << itrOut->second << endl;
