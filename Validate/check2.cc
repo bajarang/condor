@@ -109,7 +109,7 @@ int main(int argc, char* argv[]){
   }
   
   int counter = 0;
-  double nentries[14] = {6000,6000,6000,6000,6000,6000,6000,6000,6000,6000,6000,6000,6000,6000};
+  double nentries[14] = {60000,60000,60000,60000,60000,60000,60000,60000,60000,60000,60000,60000,60000,60000};
   map <string, int> :: iterator itrOut;
   for(itrOut = mapOfSamplesEntries.begin(); itrOut != mapOfSamplesEntries.end(); ++itrOut){
     cout << "Final Entries in : " << setw(20) << itrOut->first  << "  =  " << setw(10) << itrOut->second << " Original nentries : " << nentries[counter] << endl;
