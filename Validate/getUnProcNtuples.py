@@ -22,12 +22,12 @@ def compare(File1,File2):
     with open(File2,'r') as f:
         e=set(f.readlines())
 
-    open('unProcNtuples.log','w').close() #Create the file
-    with open('unProcNtuples.log','a') as f:
+    open('unProcNtuples_1.log','w').close() #Create the file
+    with open('unProcNtuples_1.log','a') as f:
         for line in list(d-e):
            f.write(line)
 	   print line
 
-compare("ExpectedFiles/ExpectedFiles_1.log", "procNtuples.log")
+compare("ExpectedFiles/ExpectedFiles_1.log", "procNtuples_1.log")
 
 
