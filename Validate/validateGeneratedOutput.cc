@@ -35,8 +35,8 @@ int main(int argc, char* argv[]){
   cout << "Line Number : "    << argv[2] << endl << endl;
   cout << "-------------------------------------------" << endl << endl;
 
-  stringstrean strWCharge;
-  strWCharge << argv[1]
+  stringstream strWCharge;
+  strWCharge << argv[1];
   int WCharge = 0;
   strWCharge >> WCharge;
   if(abs(WCharge>1)){
@@ -134,6 +134,12 @@ int main(int argc, char* argv[]){
   /////////////////save the generate histogram filenames in a separate file////////////////
   string strSaveGeneratedFileNames;  
   strSaveGeneratedFileNames = "ExpectedFiles/ExpectedFiles_";
+  if(WCharge==1){
+    strSaveGeneratedFileNames = strSaveGeneratedFileNames + "WP_";
+  }
+  else if (WCharge==-1){
+    strSaveGeneratedFileNames = strSaveGeneratedFileNames + "WM_";
+  }
 
   strSaveGeneratedFileNames = strSaveGeneratedFileNames + strLineNum.str() + ".log"; 
   ofstream outfile(strSaveGeneratedFileNames.c_str());
