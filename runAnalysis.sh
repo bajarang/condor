@@ -1,10 +1,11 @@
 #!/bin/bash
 
 #--- pass the arguments to pass_LineNum_doQCD_Syst_Dir_runDYJets_named1.sh ---# 
-LineNum=$1
-doQCD=$2
-systematics=$3
-direction=$4
+WCharge=$1
+LineNum=$2
+doQCD=$3
+systematics=$4
+direction=$5
 
 date
 
@@ -20,7 +21,7 @@ source /cvmfs/cms.cern.ch/cmsset_default.sh
 eval `scram runtime -sh`
 
 #--- run the script ---#
-./pass_LineNum_doQCD_Syst_Dir_runDYJets_named1.sh $LineNum $doQCD $systematics $direction
+./pass_LineNum_doQCD_Syst_Dir_runDYJets_named1.sh $WCharge $LineNum $doQCD $systematics $direction
 
 cd ${_CONDOR_SCRATCH_DIR}
 rm -rf CMSSW_5_3_11
