@@ -14,7 +14,8 @@ cd ${_CONDOR_SCRATCH_DIR}                                # we are inside the rem
 cp -r /home/bsutar/t3store/Asym2016-8TeV/CMSSW_5_3_11 .  # copy out framework to remove machine
 
 #--- set env on remove machine  ---#
-cd CMSSW_5_3_11/src/TreeAnalysis2012/WJetsp_CENTRAL_QCD0 
+#cd CMSSW_5_3_11/src/TreeAnalysis2012/WJetsp_CENTRAL_QCD0 
+cd CMSSW_5_3_11/src/TreeAnalysis2012/MuonChargeAsymAnalysis8TeV2012 #this setup is on git now 
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 eval `scram runtime -sh`
 
