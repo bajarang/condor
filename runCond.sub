@@ -12,7 +12,7 @@ Universe              = vanilla
 x509userproxy         = /home/bsutar/x509up_u51603
 #use_x509userproxy    = true
 Executable            = runAnalysis.sh
-Arguments             = LINENUM DOQCD SYSTEMATICS DIRECTION $(Process) $(Cluster)
+Arguments             = WCHARGE LINENUM DOQCD SYSTEMATICS DIRECTION $(Process) $(Cluster)
 
 #---------------------------------------------
 # hplusAnalyzer_TIFR.sh output are stored in .stdout
