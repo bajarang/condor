@@ -22,24 +22,36 @@ int main(int argc, char* argv[]){
 
   // Part 1.
   //////////////Exit if not correct number of arguments are passed////////////////////
-  if(argc!=2){
-    cout << "Please provide the line number to read " << endl;
-    cout << "Eg. \n\t $ ./toRead_Input_DB_Summary 20" << endl;
+  if(argc!=3){
+    cout << "Please provide the charge and the line number to read " << endl;
+    cout << "Eg. \n\t $ ./toRead_Input_DB_Summary 1 20" << endl;
     cout << "Exiting Now." << endl;
     exit(0);
   }
 
   cout << endl;
   cout << "-------------------------------------------" << endl << endl;
-  cout << "Line Number : "    << argv[1] << endl << endl;
+  cout << "WCharge      : "    << argv[1] << endl << endl;
+  cout << "Line Number : "    << argv[2] << endl << endl;
   cout << "-------------------------------------------" << endl << endl;
 
+  stringstrean strWCharge;
+  strWCharge << argv[1]
+  int WCharge = 0;
+  strWCharge >> WCharge;
+  if(abs(WCharge>1)){
+    cout << "You entered Charge = "   << WCharge << endl; 
+    cout << "It should be equal to either 1 or -1 " << endl;
+    cout << "Exiting Now."                 << endl << endl;
+    exit(0);
+  }
+
   stringstream strLineNum;
-  strLineNum << argv[1];
+  strLineNum << argv[2];
   int lineNum = 0;
   strLineNum >> lineNum;
-  if(lineNum > 35) {
-    cout << cout << "You entered Line Number = "   << lineNum << endl; 
+  if(lineNum > 929) {
+    cout << "You entered Line Number = "   << lineNum << endl; 
     cout << "It should be lesser than or equal to 35 " << endl;
     cout << "Exiting Now."                 << endl << endl;
     exit(0);
@@ -52,7 +64,7 @@ int main(int argc, char* argv[]){
   vector<string> filePath;
   stringstream strStreamFileName;
 
-  for(int i=1; i<=35; i++){
+  for(int i=1; i<=928; i++){
     inputFile >> strdoWhat >> strCI >> strTotEvents >> strEvents >> strPartition >> strCurretPar >> strFileName;
     if(i==lineNum){
       strStreamFileName << strFileName;
@@ -85,6 +97,14 @@ int main(int argc, char* argv[]){
   stringstream endAppendString;
   midAppendString << "_JetPtMin_30_VarWidth_BVeto_QCD";
   endAppendString << "_MET15_mT50.root";
+
+  //3a. add Charge
+  if(WCharge==1) {
+    beginAppendString << "_WP";
+  }
+  if(WCharge==-1){
+    beginAppendString << "_WM";
+  }
 
   // 3. add EffiCorr and TrigCorr based on Data or MC
   if(trimmedFileName.find("_Data_")!=string::npos) {
