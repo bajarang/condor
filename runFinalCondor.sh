@@ -12,16 +12,17 @@ totalLineNum=($(cat $Input_DB_Summary_File | wc -l))                      # coun
 echo "Total Number of Lines in " $Input_DB_Summary_File " = " $totalLineNum
 
 ###--- parse the command line arguments ---###
-lineNum=$1
-doQCD=$2
-systematics=$3
-direction=$4
+WCharge=$1
+lineNum=$2
+doQCD=$3
+systematics=$4
+direction=$5
 
 ###--- if illegal number of parameters are passed, exit with message ---###
-if [ "$#" -ne 1 ] && [ "$#" -ne 2 ] && [ "$#" -ne 3 ] && [ "$#" -ne 4 ]
+if [ "$#" -ne 1 ] && [ "$#" -ne 2 ] && [ "$#" -ne 3 ] && [ "$#" -ne 4 ] && [ "$#" -ne 5 ]
 then
   echo "Illegal number of parameters"
-  echo "Pass at least 2 or 3 or 4 parameters to this script"
+  echo "Pass at least 1 or 2 or 3 or 4 or 5 parameters to this script"
   echo "Exiting Now."
   return 0 
 fi
@@ -29,6 +30,15 @@ fi
 ###--- some default parameters ---###
 allSystematics="100"
 allDirection="100"
+
+###--- If incorrect WCharge is entered, exit with message ---###
+echo "You entered WCharge = " $WCharge
+if [ $WCharge -ne 1 ] && [ $WCharge -ne -1 ]
+then
+  echo "It should be either 1 or -1"
+  echo "Exiting Now."
+  return 0
+fi
 
 ###--- If incorrect line number is entered, exit with message ---###
 echo "You entered Line Number = " $lineNum
@@ -67,8 +77,8 @@ fi
 
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 eval `scram runtime -sh`
-###voms-proxy-init --voms cms   ###UNCOMMENT THIS
-###cp /tmp/x509up_u51603 ~/     ###UNCOMMENT THIS
+#voms-proxy-init --voms cms   ###UNCOMMENT THIS
+cp /tmp/x509up_u51603 ~/     ###UNCOMMENT THIS
 
 #--- create log directory ---#
 log="log_"
@@ -136,6 +146,7 @@ do
     cp $runCond $iFile                # copy cond submit script to iFile
     cp runAnalysis.sh $iFile          # pass the argument script (for LineNumber, doQC, syst and dir) 
     cd $iFile                         # cd to iFile
+    sed -i "s:WCHARGE:$WCharge:g" $runCond
     sed -i "s:LINENUM:$lineNum:g" $runCond   # dictate which file to process
     ##sed -i "s:DOQCD:$doQCD:g" $runCond   # passed doQCD 
     if [ -z "$doQCD" ] && [ -z "$systematics" ] && [ -z "$direction" ]
