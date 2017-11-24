@@ -40,6 +40,13 @@ then
   return 0
 fi
 
+if [ $WCharge -eq 1 ]
+then
+  strWCharge="WP"
+else 
+  strWCharge="WM"
+fi
+
 ###--- If incorrect line number is entered, exit with message ---###
 echo "You entered Line Number = " $lineNum
 if [ $lineNum -gt $totalLineNum ]   
@@ -89,7 +96,7 @@ outcond="$baseDir$logDir"           # assign a variable to log directory
 echo "Visit this log directory : " $outcond
 #--- copy related files to log directory for future reference ---#
 runCond="runCond.sub"
-cp $runCond $outcond             # 1. cond submit script
+cp $runCond $outcond                # 1. cond submit script
 cp runAnalysis.sh $outcond          # 2. script where we pass our parameters on the command line 
 cp $Input_DB_Summary_File $outcond  # 3. Input_DB_Summary.txt file 
 cd $outcond                         # we are inside log directory now
@@ -160,7 +167,7 @@ do
         sed -i "s:SYSTEMATICS:$allSystematics:g" $runCond
         sed -i "s:DIRECTION:$allDirection:g" $runCond 
         runCondStripped=${runCond/.sub/""}
-        runCondSpecific=$runCondStripped"_"$ii".sub" 
+        runCondSpecific=$runCondStripped"_"$strWCharge"_"$lineNum"_"$ii"_"$systematics"_"$direction".sub" 
         cp $runCond $runCondSpecific
         echo "condor submit stage 1"
         condor_submit $runCondSpecific ###this is already properly indented
@@ -172,7 +179,7 @@ do
       sed -i "s:SYSTEMATICS:$allSystematics:g" $runCond
       sed -i "s:DIRECTION:$allDirection:g"     $runCond
       runCondStripped=${runCond/.sub/""}
-      runCondSpecific=$runCondStripped"_"$doQCD".sub" 
+      runCondSpecific=$runCondStripped"_"$strWCharge"_"$lineNum"_"$doQCD"_"$systematics"_"$direction".sub" 
       mv $runCond $runCondSpecific
       echo "condor submit stage 1"
       condor_submit $runCondSpecific ###this is already properly indented
@@ -182,7 +189,7 @@ do
       sed -i "s:SYSTEMATICS:$systematics:g"    $runCond
       sed -i "s:DIRECTION:$allDirection:g"     $runCond
       runCondStripped=${runCond/.sub/""}
-      runCondSpecific=$runCondStripped"_"$doQCD".sub" 
+      runCondSpecific=$runCondStripped"_"$strWCharge"_"$lineNum"_"$doQCD"_"$systematics"_"$direction".sub" 
       mv $runCond $runCondSpecific
       echo "condor submit stage 2"
       condor_submit $runCondSpecific ###this is already properly indented
@@ -192,7 +199,7 @@ do
       sed -i "s:SYSTEMATICS:$systematics:g"    $runCond
       sed -i "s:DIRECTION:$direction:g"        $runCond
       runCondStripped=${runCond/.sub/""}
-      runCondSpecific=$runCondStripped"_"$doQCD".sub" 
+      runCondSpecific=$runCondStripped"_"$strWCharge"_"$lineNum"_"$doQCD"_"$systematics"_"$direction".sub" 
       mv $runCond $runCondSpecific
       echo "condor submit stage 3"
       condor_submit $runCondSpecific ###this is already properly indented
