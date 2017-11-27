@@ -41,6 +41,10 @@ string generateFileNames(string charge, string sample, string doQCD, string syst
     fullFileName = leptonFlavor + energy + sample + "_dR_5311" + charge + "_" + effCorr + trigCorr + "Syst_" + syst + "_" + strDirection + "JetPtMin_30_VarWidth_BVeto_QCD" + doQCD + "_MET15_mT50_Merge.root";
     ////cout << "Adding into : " << fullFileName << endl;
   }
+  else if (sample=="DYJets_MIX_UNFOLDING"){
+    fullFileName = leptonFlavor + energy + sample + "_dR_5311_Inf3_" + appendRange + charge + "_" + effCorr + trigCorr + "Syst_" + syst + "_" + strDirection + "JetPtMin_30_VarWidth_BVeto_QCD" + doQCD + "_MET15_mT50.root";
+    ////cout << "Adding into : " << fullFileName << endl;
+  }
   else {
     fullFileName = leptonFlavor + energy + sample + "_dR_5311_" + appendRange  + charge + "_" + effCorr + trigCorr + "Syst_" + syst + "_" + strDirection + "JetPtMin_30_VarWidth_BVeto_QCD" + doQCD + "_MET15_mT50.root";
     ////cout << "Adding this : " << fullFileName << endl;
