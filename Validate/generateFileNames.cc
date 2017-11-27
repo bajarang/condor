@@ -37,7 +37,13 @@ string generateFileNames(string charge, string sample, string doQCD, string syst
   //////////////////////////////
   /// eg. SMu_8TeV_Data_dR_5311_00001_WP_EffiCorr_0_TrigCorr_1_Syst_0_CN_JetPtMin_30_VarWidth_BVeto_QCD0_MET15_mT50.root
   string fullFileName;
-  fullFileName = leptonFlavor + energy + sample + "_dR_5311_" + appendRange  + charge + "_" + effCorr + trigCorr + "Syst_" + syst + "_" + strDirection + "JetPtMin_30_VarWidth_BVeto_QCD" + doQCD + "_MET15_mT50.root";
-  cout << "Returning string : " << fullFileName << endl;
+  if(appendRange=="Merge"){
+    fullFileName = leptonFlavor + energy + sample + "_dR_5311" + charge + "_" + effCorr + trigCorr + "Syst_" + syst + "_" + strDirection + "JetPtMin_30_VarWidth_BVeto_QCD" + doQCD + "_MET15_mT50_Merge.root";
+    ////cout << "Adding into : " << fullFileName << endl;
+  }
+  else {
+    fullFileName = leptonFlavor + energy + sample + "_dR_5311_" + appendRange  + charge + "_" + effCorr + trigCorr + "Syst_" + syst + "_" + strDirection + "JetPtMin_30_VarWidth_BVeto_QCD" + doQCD + "_MET15_mT50.root";
+    ////cout << "Adding this : " << fullFileName << endl;
+  }
   return fullFileName;
 }
