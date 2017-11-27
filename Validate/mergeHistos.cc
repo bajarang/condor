@@ -63,14 +63,14 @@ int main(int argc, char* argv[]){
   listSamples[2]  =                     "ZZ";
   listSamples[3]  =                     "WZ";
   listSamples[4]  =                     "WW";
-  listSamples[5]  =                    "T_s";
-  listSamples[6]  =                    "T_t";
-  listSamples[7]  =                   "T_tW";
-  listSamples[8]  =                 "Tbar_s";
-  listSamples[9]  =                 "Tbar_t";
-  listSamples[10] =                "Tbar_tW";
-  listSamples[11] =   "DYJets_MIX_UNFOLDING";
-  listSamples[12] =          "DYJets_10to50";
+  listSamples[5]  =            "T_s_channel";
+  listSamples[6]  =            "T_t_channel";
+  listSamples[7]  =           "T_tW_channel";
+  listSamples[8]  =         "Tbar_s_channel";
+  listSamples[9]  =         "Tbar_t_channel";
+  listSamples[10] =        "Tbar_tW_channel";
+  listSamples[11] =          "DYJets_10to50";
+  listSamples[12] =   "DYJets_MIX_UNFOLDING";
   listSamples[13] = "WJetsALL_MIX_UNFOLDING";
 
   int beginRange[14]={0};
@@ -86,8 +86,8 @@ int main(int argc, char* argv[]){
   beginRange[8]  =   1; endRange[8]  =   1;  //                    "Tbar_s"
   beginRange[9]  =   1; endRange[9]  =   1;  //                    "Tbar_t"
   beginRange[10] =   1; endRange[10] =   1;  //                   "Tbar_tW"
-  beginRange[11] =   1; endRange[11] =   1;  //      "DYJets_MIX_UNFOLDING"
-  beginRange[12] =   1; endRange[12] =  85;  //             "DYJets_10to50"
+  beginRange[11] =   1; endRange[11] =   1;  //             "DYJets_10to50"
+  beginRange[12] =   1; endRange[12] =  85;  //      "DYJets_MIX_UNFOLDING" 
   beginRange[13] =   1; endRange[13] = 239;  //    "WJetsALL_MIX_UNFOLDING"
 
 
