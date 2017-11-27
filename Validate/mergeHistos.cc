@@ -12,6 +12,7 @@
 #include <iostream>
 #include <sstream>
 #include <stdio.h>
+#include <cstdlib>
 #include "TFile.h"
 #include "generateFileNames.h"
 
@@ -28,6 +29,9 @@ int main(int argc, char* argv[]){
     cout << "For sample, choose from this list : " << endl;
     cout << "Data, TTJets, ZZ, WZ, WW, T_s, T_t, T_tW, Tbar_s, Tbar_t, Tbar_tW, DYJets_MIX_UNFOLDING, DYJets_10to50, WJetsALL_MIX_UNFOLDING" << endl;
   }
+
+  // 0. provide path of the input files which we want to add
+  string pathDir = "/home/bsutar/t3store2/MuonChargeAsymAnalysis8TeV2012/Results/HistoFiles/Condor/";
 
   // 1. parse charge
   stringstream charge;
@@ -191,25 +195,32 @@ int main(int argc, char* argv[]){
   }
 
   stringstream rangeStr;
-  cout << index << "  " << beginRange[index] << "  " << endRange[index] << endl;
+  ////cout << index << "  " << beginRange[index] << "  " << endRange[index] << endl;
+  string mergeIntoThisFile = "";
+  mergeIntoThisFile = generateFileNames(strCharge,listSamples[index],doQCD,strSyst,strDir,"Merge");  
+  string longStrFileToMerge = "";
   for(int ii=beginRange[index]; ii<=endRange[index]; ii++){
-  //for(int ii=beginRange[index]; ii<=index+1; ii++){
-    cout << ii << endl;
+    ////cout << ii << endl;
     rangeStr << ii;
 
     string rangeStrAppend = "0000" + rangeStr.str();
     int isize = rangeStrAppend.size();
     string subRangeStrAppend = rangeStrAppend.substr(isize-5,5);
-    generateFileNames(strCharge,listSamples[index],doQCD,strSyst,strDir,subRangeStrAppend);
-    ///string command = "hadd -k ";
+    string fileToMerge = "";
+    fileToMerge = generateFileNames(strCharge,listSamples[index],doQCD,strSyst,strDir,subRangeStrAppend);
+    longStrFileToMerge = longStrFileToMerge + pathDir + fileToMerge + " ";
+    ////cout << longStrFileToMerge << endl;
+    /////////////clear strings////////////
     rangeStr.str("");
     rangeStrAppend.clear();
     subRangeStrAppend.clear();
+    fileToMerge.clear();
   }
 
+  string command = "hadd -k -f ";
+  command = command + pathDir + mergeIntoThisFile + " " + longStrFileToMerge;
+  cout << command << endl;
+  system(command.c_str());
 
-
-
-
-
+  return 0;
 }
