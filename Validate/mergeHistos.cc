@@ -75,20 +75,20 @@ int main(int argc, char* argv[]){
 
   int beginRange[14]={0};
   int endRange[14]={0};
-  beginRange[0]  =   1; endRange[0]  = 579;
-  beginRange[1]  = 580; endRange[1]  = 585;
-  beginRange[2]  = 586; endRange[2]  = 587;
-  beginRange[3]  = 588; endRange[3]  = 591;
-  beginRange[4]  = 592; endRange[4]  = 596;
-  beginRange[5]  = 597; endRange[5]  = 597;
-  beginRange[6]  = 598; endRange[6]  = 599;
-  beginRange[7]  = 600; endRange[7]  = 600;
-  beginRange[8]  = 601; endRange[8]  = 601;
-  beginRange[9]  = 602; endRange[9]  = 602;
-  beginRange[10] = 603; endRange[10] = 603;
-  beginRange[11] = 604; endRange[11] = 604;
-  beginRange[12] = 605; endRange[12] = 689;
-  beginRange[13] = 690; endRange[13] = 928;
+  beginRange[0]  =   1; endRange[0]  = 579;  //                      "Data" 
+  beginRange[1]  =   1; endRange[1]  =   6;  //                    "TTJets"
+  beginRange[2]  =   1; endRange[2]  =   2;  //                        "ZZ"
+  beginRange[3]  =   1; endRange[3]  =   4;  //                        "WZ"
+  beginRange[4]  =   1; endRange[4]  =   5;  //                        "WW"
+  beginRange[5]  =   1; endRange[5]  =   1;  //                       "T_s"
+  beginRange[6]  =   1; endRange[6]  =   1;  //                       "T_t"
+  beginRange[7]  =   1; endRange[7]  =   1;  //                      "T_tW"
+  beginRange[8]  =   1; endRange[8]  =   1;  //                    "Tbar_s"
+  beginRange[9]  =   1; endRange[9]  =   1;  //                    "Tbar_t"
+  beginRange[10] =   1; endRange[10] =   1;  //                   "Tbar_tW"
+  beginRange[11] =   1; endRange[11] =   1;  //      "DYJets_MIX_UNFOLDING"
+  beginRange[12] =   1; endRange[12] =  85;  //             "DYJets_10to50"
+  beginRange[13] =   1; endRange[13] = 239;  //    "WJetsALL_MIX_UNFOLDING"
 
 
   bool validSample = false;
@@ -219,7 +219,7 @@ int main(int argc, char* argv[]){
 
   string command = "hadd -k -f ";
   command = command + pathDir + mergeIntoThisFile + " " + longStrFileToMerge;
-  cout << command << endl;
+  ////cout << command << endl;
   system(command.c_str());
 
   return 0;
