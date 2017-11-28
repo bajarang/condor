@@ -27,7 +27,7 @@ int main(int argc, char* argv[]){
     cout << "" << endl;
     cout << "Here charge can be either 1 or -1" << endl;
     cout << "For sample, choose from this list : " << endl;
-    cout << "Data, TTJets, ZZ, WZ, WW, T_s, T_t, T_tW, Tbar_s, Tbar_t, Tbar_tW, DYJets_MIX_UNFOLDING, DYJets_10to50, WJetsALL_MIX_UNFOLDING" << endl;
+    cout << "Data, TTJets, ZZ, WZ, WW, T_s, T_t, T_tW, Tbar_s, Tbar_t, Tbar_tW, DYJets_MIX_UNFOLDING, DYJets10to50, WJetsALL_MIX_UNFOLDING" << endl;
   }
 
   // 0. provide path of the input files which we want to add
@@ -69,7 +69,7 @@ int main(int argc, char* argv[]){
   listSamples[8]  =         "Tbar_s_channel";
   listSamples[9]  =         "Tbar_t_channel";
   listSamples[10] =        "Tbar_tW_channel";
-  listSamples[11] =          "DYJets_10to50";
+  listSamples[11] =          "DYJets10to50";
   listSamples[12] =   "DYJets_MIX_UNFOLDING";
   listSamples[13] = "WJetsALL_MIX_UNFOLDING";
 
@@ -86,7 +86,7 @@ int main(int argc, char* argv[]){
   beginRange[8]  =   1; endRange[8]  =   1;  //                    "Tbar_s"
   beginRange[9]  =   1; endRange[9]  =   1;  //                    "Tbar_t"
   beginRange[10] =   1; endRange[10] =   1;  //                   "Tbar_tW"
-  beginRange[11] =   1; endRange[11] =   1;  //             "DYJets_10to50"
+  beginRange[11] =   1; endRange[11] =   1;  //              "DYJets10to50"
   beginRange[12] =   1; endRange[12] =  85;  //      "DYJets_MIX_UNFOLDING" 
   beginRange[13] =   1; endRange[13] = 239;  //    "WJetsALL_MIX_UNFOLDING"
 
@@ -103,7 +103,7 @@ int main(int argc, char* argv[]){
     cout << "Please enter valid sample option" << endl;
     cout << "eg. from this list : " << endl;
     cout << "\tData, SigMC, BkgdMC, TTJets, DYJets_MIX," << endl;
-    cout << "\tDYJets_10to50, T_s, T_t, T_tW, Tbar_s,"   << endl;
+    cout << "\tDYJets10to50, T_s, T_t, T_tW, Tbar_s,"   << endl;
     cout << "\tTbar_t, Tbar_tW, WW, WZ, ZZ" << endl;
     cout << "Exiting Now." << endl;
     exit(0);
