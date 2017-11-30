@@ -37,6 +37,13 @@ then
   return 
 fi
 
+if [ $WCharge -eq 1 ]
+then
+  strWCharge="WP"
+else
+  strWCharge="WM"
+fi
+
 ###--- If incorrect Range is entered, exit with message ---###
 rangeArray=('25-above' '25-30' '30-35' '35-40' '40-45' '45-above')
 withinRange=false
@@ -72,26 +79,27 @@ if [ "$validSystematicsNDirections" == true ]
 then
   echo "provided systematics " $systematics " and " $direction " are correct, continuing..."
 else
-  echo "Please provide correct systematics value and direction values, exiting now."
+  echo "Please provide correct systematics and direction values, exiting now."
   return 0
 fi
 
-source /cvmfs/cms.cern.ch/cmsset_default.sh
-eval `scram runtime -sh`
+####source /cvmfs/cms.cern.ch/cmsset_default.sh
+####eval `scram runtime -sh`
 ##voms-proxy-init --voms cms   ###UNCOMMENT THIS
-cp /tmp/x509up_u51603 ~/     ###UNCOMMENT THIS
+####cp /tmp/x509up_u51603 ~/     ###UNCOMMENT THIS
 
 ##--- create log directory ---#
-logDir=$logUnfold
+logDir="logUnfold"
+echo $logDir
 baseDir="/home/bsutar/t3store2/condor/condor_log/" # provide base path for log directory 
-mkdir $baseDir$logDir               # make a proper log directory 
-outcond="$baseDir$logDir"           # assign a variable to log directory
+mkdir -p $baseDir$logDir                # make a proper log directory 
+outcond="$baseDir$logDir"               # assign a variable to log directory
 echo "Visit this log directory : " $outcond
 
 ##--- copy related files to log directory for future reference ---#
 runUnfCond="runUnfCond.sub"
-cp $runUnfCond       $outcond       # 1. cond submit script
-cp runUnfAnalysis.sh $outcond       # 2. script where we pass our parameters on the command line 
+cp $runUnfCond $outcond                # 1. cond submit script
+cp runUnfAnalysis.sh $outcond          # 2. script where we pass our parameters on the command line 
 cd $outcond                         # we are inside log directory now
 
 #######------ WE ARE INSIDE LOG DIRECTORY NOW ------######
@@ -101,23 +109,32 @@ cd $outcond                         # we are inside log directory now
 #replace runUnfCond.sub arguments, as per input
 #submit the condor jobs, for each ntuple
 #----------------------------------------------
-iDir=$WCharge$Variable
-mkdir -p $iDir                      # iDir = directory where condor info will be saved based on the passed args
-cp $runUnfCond $iDir                # copy cond submit script to iDir
-cp runUnfAnalysis.sh $iDir          # pass the argument script (for WCharge, Variable, Range, CT, systematics, direction) 
-cd $iDir                            # cd to iDir
-runUnfCondCopy=$runUnfCond/.sub/""
-runUnfCondCopy=$runcCondCopy"_Copy.sub"
+prefix="unf_"
+iDir=$prefix$strWCharge"_"$Variable
+mkdir -p $iDir                          # iDir = directory where condor info will be saved based on the passed args
+echo "Created " $iDir
+cp $runUnfCond $iDir                    # copy cond submit script to iDir
+echo "Copied" $runUnfCond " to " $iDir
+cp runUnfAnalysis.sh $iDir              # pass the argument script (for WCharge, Variable, Range, CT, systematics, direction) 
+echo "Copied runUnfAnalysis.sh to " $iDir
+cd $iDir                                # cd to iDir
+echo "We are inside " $iDir " now "
+runUnfCondCopy=${runUnfCond/.sub/""}
+echo $runUnfCondCopy
+runUnfCondCopy=$runUnfCondCopy"_Copy.sub" 
+echo $runUnfCondCopy
 cp $runUnfCond $runUnfCondCopy
-sed -i "s:WCHARGE:$WCharge:g"       $runUnfCond
-sed -i "s:VARIABLE:$Variable:g"     $runUnfCond  
-sed -i "s:RANGE:$Range"             $runUnfCond 
-sed -i "s:CT:$CT"                   $runUnfCond 
-sed -i "s:SYSTEMATICS:$systematics" $runUnfCond 
-sed -i "s:DIRECTION:$direction"     $runUnfCond 
+sed -i "s:WCHARGE:$WCharge:g"         $runUnfCond
+sed -i "s:VARIABLE:$Variable:g"       $runUnfCond  
+sed -i "s:RANGE:$Range:g"             $runUnfCond 
+sed -i "s:CLOSURETEST:$CT:g"                   $runUnfCond 
+sed -i "s:SYSTEMATICS:$systematics:g" $runUnfCond 
+sed -i "s:DIRECTION:$direction:g"     $runUnfCond 
 runUnfCondStripped=${runUnfCond/.sub/""}
-runUnfCondSpecific=$runUnfCondStripped"_"$WCharge"_"$Variable"_"$Range"_"$CT"_"$systematics"_"$direction".sub" 
+runUnfCondSpecific=$runUnfCondStripped"_"$strWCharge"_"$Variable"_"$Range"_"$CT"_"$systematics"_"$direction".sub" 
 cp $runUnfCond $runUnfCondSpecific
 echo "condor submit stage 1"
-condor_submit $runUnfCondSpecific
+#####condor_submit $runUnfCondSpecific
 cp $runUnfCondCopy $runUnfCond
+cd /home/bsutar/t3store2/condor/Unfolding 
+echo "back to /home/bsutar/t3store2/condor/Unfolding " 
