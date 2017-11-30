@@ -83,14 +83,13 @@ else
   return 0
 fi
 
-####source /cvmfs/cms.cern.ch/cmsset_default.sh
-####eval `scram runtime -sh`
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+eval `scram runtime -sh`
 ##voms-proxy-init --voms cms   ###UNCOMMENT THIS
-####cp /tmp/x509up_u51603 ~/     ###UNCOMMENT THIS
+cp /tmp/x509up_u51603 ~/     ###UNCOMMENT THIS
 
 ##--- create log directory ---#
 logDir="logUnfold"
-echo $logDir
 baseDir="/home/bsutar/t3store2/condor/condor_log/" # provide base path for log directory 
 mkdir -p $baseDir$logDir                # make a proper log directory 
 outcond="$baseDir$logDir"               # assign a variable to log directory
@@ -107,22 +106,16 @@ cd $outcond                         # we are inside log directory now
 #----------------------------------------------
 #copy condor scripts to each input ntuple dir
 #replace runUnfCond.sub arguments, as per input
-#submit the condor jobs, for each ntuple
 #----------------------------------------------
 prefix="unf_"
 iDir=$prefix$strWCharge"_"$Variable
 mkdir -p $iDir                          # iDir = directory where condor info will be saved based on the passed args
 echo "Created " $iDir
 cp $runUnfCond $iDir                    # copy cond submit script to iDir
-echo "Copied" $runUnfCond " to " $iDir
 cp runUnfAnalysis.sh $iDir              # pass the argument script (for WCharge, Variable, Range, CT, systematics, direction) 
-echo "Copied runUnfAnalysis.sh to " $iDir
 cd $iDir                                # cd to iDir
-echo "We are inside " $iDir " now "
 runUnfCondCopy=${runUnfCond/.sub/""}
-echo $runUnfCondCopy
 runUnfCondCopy=$runUnfCondCopy"_Copy.sub" 
-echo $runUnfCondCopy
 cp $runUnfCond $runUnfCondCopy
 sed -i "s:WCHARGE:$WCharge:g"         $runUnfCond
 sed -i "s:VARIABLE:$Variable:g"       $runUnfCond  
@@ -137,4 +130,3 @@ echo "condor submit stage 1"
 #####condor_submit $runUnfCondSpecific
 cp $runUnfCondCopy $runUnfCond
 cd /home/bsutar/t3store2/condor/Unfolding 
-echo "back to /home/bsutar/t3store2/condor/Unfolding " 
