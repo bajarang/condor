@@ -12,7 +12,7 @@ Universe              = vanilla
 x509userproxy         = /home/bsutar/x509up_u51603
 #use_x509userproxy    = true
 Executable            = runUnfolding.sh
-Arguments             = WCHARGE VARIABLE RANGE CT SYSTEMATICS DIRECTION $(Process) $(Cluster)
+Arguments             = WCHARGE VARIABLE RANGE CLOSURETEST SYSTEMATICS DIRECTION $(Process) $(Cluster)
 
 #---------------------------------------------
 # hplusAnalyzer_TIFR.sh output are stored in .stdout
