@@ -161,7 +161,7 @@ do
       for ii in {0..3}
       do
         runCondCopy=$runCond/.sub/""
-        runCondCopy=$runcCondCopy"_Copy.sub"
+        runCondCopy=$runCondCopy"_Copy.sub"
         cp $runCond $runCondCopy
         sed -i "s:DOQCD:$ii:g" $runCond   # passed doQCD 
         sed -i "s:SYSTEMATICS:$allSystematics:g" $runCond
