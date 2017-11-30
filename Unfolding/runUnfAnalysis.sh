@@ -22,7 +22,7 @@ source /cvmfs/cms.cern.ch/cmsset_default.sh
 eval `scram runtime -sh`
 
 #--- run the script ---#
-./pass_LineNum_doQCD_Syst_Dir_runMyFastPlots_named1.sh $WCharge $Variable $Range $CT $systematics $direction
+./pass_Charge_Var_Range_CT_Syst_Dir_runMyFastPlots_named1.sh $WCharge $Variable $Range $CT $systematics $direction
 
 cd ${_CONDOR_SCRATCH_DIR}
 rm -rf CMSSW_5_3_11
