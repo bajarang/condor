@@ -160,7 +160,7 @@ do
     then
       for ii in {0..3}
       do
-        runCondCopy=$runCond/.sub/""
+        runCondCopy=${runCond/.sub/""}
         runCondCopy=$runCondCopy"_Copy.sub"
         cp $runCond $runCondCopy
         sed -i "s:DOQCD:$ii:g" $runCond   # passed doQCD 
