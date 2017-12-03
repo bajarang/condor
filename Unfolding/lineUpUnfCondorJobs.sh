@@ -7,4 +7,17 @@
 # SYSTEMATICS : 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
 # DIRECTION   : 0 or 1 or -1
 
-source runUnfFinalCondor.sh  -1 lepEta_Zinc0jet 30-35 1 0  0
+#wplus
+source runUnfFinalCondor.sh   1 lepEta_Zinc0jet 0 0  0 25_above
+source runUnfFinalCondor.sh   1 lepEta_Zinc0jet 0 0  0 25_30
+source runUnfFinalCondor.sh   1 lepEta_Zinc0jet 0 0  0 30_35
+source runUnfFinalCondor.sh   1 lepEta_Zinc0jet 0 0  0 35_40
+source runUnfFinalCondor.sh   1 lepEta_Zinc0jet 0 0  0 40_45
+source runUnfFinalCondor.sh   1 lepEta_Zinc0jet 0 0  0 45_above
+#wminus
+source runUnfFinalCondor.sh  -1 lepEta_Zinc0jet 0 0  0 25_above
+source runUnfFinalCondor.sh  -1 lepEta_Zinc0jet 0 0  0 25_30
+source runUnfFinalCondor.sh  -1 lepEta_Zinc0jet 0 0  0 30_35
+source runUnfFinalCondor.sh  -1 lepEta_Zinc0jet 0 0  0 35_40
+source runUnfFinalCondor.sh  -1 lepEta_Zinc0jet 0 0  0 40_45
+source runUnfFinalCondor.sh  -1 lepEta_Zinc0jet 0 0  0 45_above
