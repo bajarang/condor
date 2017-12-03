@@ -10,20 +10,20 @@
 ###--- parse the command line arguments ---###
 WCharge=$1
 Variable=$2
-Range=$3
-CT=$4
-systematics=$5
-direction=$6
+CT=$3
+systematics=$4
+direction=$5
+Range=$6
 
 ###--- if illegal number of parameters are passed, exit with message ---###
-if [ "$#" -ne 6 ]
+if [ "$#" -ne 5 ] && [ "$#" -ne 6 ]
 then
   echo "Illegal number of parameters"
-  echo "Pass 6 parameters to this script"
+  echo "Pass 5 or 6 parameters to this script"
   echo "Here is a list (in that order)"
-  echo "charge variable range CT systematics direction"
-  echo "Eg : 1. $ ./runUnfFinalCondor.sh  1 lepEta_Zinc0jet 25-30 1 0  0"
-  echo "Eg : 2. $ ./runUnfFinalCondor.sh -1 lepEta_Zexc2jet 40-45 0 1 -1"
+  echo "charge variable CT systematics direction range"
+  echo "Eg : 1. $ ./runUnfFinalCondor.sh  1 lepEta_Zinc0jet 1 0  0"
+  echo "Eg : 2. $ ./runUnfFinalCondor.sh -1 lepEta_Zexc2jet 0 1 -1 25_30"
   echo "Exiting Now."
   return 0 
 fi
@@ -45,8 +45,9 @@ else
 fi
 
 ###--- If incorrect Range is entered, exit with message ---###
-rangeArray=('25-above' '25-30' '30-35' '35-40' '40-45' '45-above')
+rangeArray=("25_above" "25_30" "30_35" "35_40" "40_45" "45_above")
 withinRange=false
+echo $Range
 for ii in {0..5}
 do 
   if [ ${rangeArray[ii]} == $Range ]
@@ -119,14 +120,14 @@ runUnfCondCopy=$runUnfCondCopy"_Copy.sub"
 cp $runUnfCond $runUnfCondCopy
 sed -i "s:WCHARGE:$WCharge:g"         $runUnfCond
 sed -i "s:VARIABLE:$Variable:g"       $runUnfCond  
-sed -i "s:RANGE:$Range:g"             $runUnfCond 
-sed -i "s:CLOSURETEST:$CT:g"                   $runUnfCond 
+sed -i "s:CLOSURETEST:$CT:g"          $runUnfCond 
 sed -i "s:SYSTEMATICS:$systematics:g" $runUnfCond 
 sed -i "s:DIRECTION:$direction:g"     $runUnfCond 
+sed -i "s:RANGE:$Range:g"             $runUnfCond 
 runUnfCondStripped=${runUnfCond/.sub/""}
 runUnfCondSpecific=$runUnfCondStripped"_"$strWCharge"_"$Variable"_"$Range"_"$CT"_"$systematics"_"$direction".sub" 
 cp $runUnfCond $runUnfCondSpecific
 echo "condor submit stage 1"
-#####condor_submit $runUnfCondSpecific
+condor_submit $runUnfCondSpecific
 cp $runUnfCondCopy $runUnfCond
 cd /home/bsutar/t3store2/condor/Unfolding 
