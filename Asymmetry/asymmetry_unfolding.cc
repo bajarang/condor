@@ -1,9 +1,10 @@
 /*
- *This script is for finding the Muon Charge Asymmetry for different pt ranges
- *
-Run it with following command:
-g++ rebin_eta_bins_finer_to_coarser_asym_pt_range_specific_8TeV_unfolding.cc -o rebin_eta_bins_finer_to_coarser_asym_pt_range_specific_8TeV_unfolding getAsym.cc fold_mside.cc fold_pside.cc finer_to_coarser_error_prop.cc `root-config --glibs --cflags`
-*/
+ * This script takes three arguements : variable range and closureTest and finds the Muon Charge Asymmetry on Unfolded level 
+ * Compile with :
+ * $ g++ asymmetry_unfolding.cc -o asymmetry_unfolding validateSystNDirection.cc getAsym.cc fold_mside.cc fold_pside.cc finer_to_coarser_error_prop.cc `root-config --glibs --cflags`
+ * Run with :
+ * $ ./asymmetry_unfolding variable range closureTest systematics direction
+ */
 
 
 #include <iostream>
@@ -18,27 +19,79 @@ g++ rebin_eta_bins_finer_to_coarser_asym_pt_range_specific_8TeV_unfolding.cc -o 
 #include "getAsym.h"
 #include "fold_mside.h"
 #include "fold_pside.h"
-#include "add_with_error.h"
-#include "sub_with_error.h"
 #include "getAsymFiner.h"
-
+#include "validateSystNDirection.h"
+#include "add_mtop.h"
 using namespace std;
 
 int main(int argc, char* argv[]){
 
+  ///////////////Check if correct number of args are passed or not/////////////////////////
+  if(argc!=6){
+    cout << "You passed " << argc << " arguments " << endl;
+    cout << "Program expects 5 arguments as explained below." << endl;
+    cout << "$ ./asymmetry_unfolding variable range closureTest systematics direction" << endl;
+    cout << "" << endl;
+    cout << "Here variable can be : lepEta_Zinc0jet or lepEta_Zinc4jet etc..." << endl;
+    cout << "For range, choose from this list : " << endl;
+    cout << "  25_above or 25_30 or 30_35 or 35_40 or 40_45 or 45_above" << endl;
+    cout << "For closureTest, pass either 0 or 1" << endl;
+    cout << "systematics and direction should be as expected, refer to validateSystNDirection code."<< endl;
+    exit(0);
+  }
+
   gStyle->SetOptStat(0);
-  //TApplication app("app", &argc, argv);
 
-  //#################################//
+  /////////////////////////////parse arguments/////////////////////////////////
+  // 1. parse variable 
+  string variable = argv[1];
+  cout << "First argument variable : " << variable << endl;
+
+  // 2. parse range
+  string availableRange[6] = {"25_above", "25_30", "30_35", "35_40", "40_45", "45_above"};
+  string range = argv[2];
+  bool withinRange = false;
+  cout << "Second argument range : " << range << endl;
+  for(int ii=0; ii<6; ii++){
+    if(availableRange[ii]==range) withinRange=true;
+  }
+  if(withinRange){
+    cout << "Passed range is within accepted ranges, proceeding..." << endl;
+  }
+  else{
+    cout << "passed range is not accepted, exiting now." << endl;
+    exit(0);
+  }
+
+  // modify variable wrt range
+  string str_pt_low;
+  string str_pt_high;
+  if(range!="25_above"){ 
+    variable = variable + "_leppt_" + range;
+  }
+  cout << "We will process this variable " << variable << endl;
+
+  // 3. parse closureTest
+  string closureTest = argv[3];
+  if(closureTest!="0" && closureTest!="1") {
+    cout << "You passed closureTest : " << closureTest << endl;
+    cout << "It can be either 0 or 1, exiting now" << endl;
+    exit(0);
+  }
+
+  // 4. parse systematics
+  string systematics = argv[4];
+  string direction   = argv[5];
+  if(!validateSystNDirection(systematics, direction)) {
+    cout << "systematics and direction are not within expected list values, exiting now." << endl;
+    exit(0);
+  }
  
-  string str_pt_low  = "25";
-  string str_pt_high = "30";
-
-  //#################################//
-
-  string variable = "lepEta_Zinc0jet";
-  if(!str_pt_high.empty()) variable = variable + "_leppt_" + str_pt_low + "_" + str_pt_high;
-  cout << "VARIABLE : " << variable << endl;
+  // 5. for direction, decide append strings
+  string strDirection;
+  if(direction=="0")      strDirection = "CN";
+  else if(direction=="1") strDirection = "UP"; 
+  else                    strDirection = "DN"; 
 
   //FinerEtaBins
   int nlepEta_ZincNjet_finerbins(46);
@@ -57,33 +110,44 @@ int main(int argc, char* argv[]){
 
   //###     muplus    ###//
   //dir
-  string muplus_dir;  
-  muplus_dir             = "Results/PNGFiles/MySetOfCuts/MuPt25/wplus/FinerBins/Systematics/CENTRAL/FastPlots_30_Syst_0";
-  if(!str_pt_low.empty()) muplus_dir = muplus_dir + "_leppt_" + str_pt_low + "_" + str_pt_high;
-  muplus_dir             = muplus_dir + "_VarWidth/";
-  
+  string mu_dir   = "/home/bsutar/t3store2/MuonChargeAsymAnalysis8TeV2012/Results/PNGFiles/Condor/";  
+  string muplus_dir;
+  muplus_dir      = mu_dir + "FastPlots_WP_Syst_" + systematics + "_" + strDirection + "_" + variable;
+  muplus_dir      = muplus_dir + "_JetPt_30_VarWidth/";
+
   //files
-  string mu_unf_file     = "SMu_8TeV_lepEta_Zinc0jet";
-  if(!str_pt_low.empty()) mu_unf_file = mu_unf_file + "_leppt_" + str_pt_low + "_" + str_pt_high;
-  mu_unf_file = mu_unf_file + "_fastplots_VarWidth.root";
+  string mu_unf_file  = "SMu_8TeV_" + variable;
+  mu_unf_file         = mu_unf_file + "_fastplots_VarWidth.root";
   
   string muplus_unf_file = muplus_dir + mu_unf_file;
-  cout << muplus_unf_file << endl;
+  cout << "Visiting for WP :  1. " << muplus_unf_file << endl;
   
   //tfiles and histos
   TFile *muplus_unf_tfile          = new TFile (muplus_unf_file.c_str(),"READ");
+  if(!muplus_unf_tfile){
+    cout << "Error opening file : " << muplus_unf_file << endl;
+    cout << "Exiting now." << endl;
+    exit(0);
+  }
+
   TH1D  *muplus_unf_finer_histo    = (TH1D*)muplus_unf_tfile->Get("Central");
   TH1D  *muplus_unf_coarser_histo  = new TH1D ("","",nlepEta_ZincNjet_coarserbins, lepEta_ZincNjet_coarserbins);
   muplus_unf_coarser_histo         = finer_to_coarser_error_prop(muplus_unf_finer_histo);
    
+  //######## Add -ve eta entries with +ve eta entries ########//
+  TH1D *mtop_added_muplus_histo   = new TH1D ("","",nlepEta_ZincNjet_coarserbins_pside,lepEta_ZincNjet_coarserbins_pside);
+  mtop_added_muplus_histo         = add_mtop(muplus_unf_coarser_histo);
+
   //###     muminus    ###//
   //dir
-  string muminus_dir;  
-  muminus_dir             = "Results/PNGFiles/MySetOfCuts/MuPt25/wminus/FinerBins/Systematics/CENTRAL/FastPlots_30_Syst_0";
-  if(!str_pt_low.empty()) muminus_dir = muminus_dir + "_leppt_" + str_pt_low + "_" + str_pt_high;
-  muminus_dir             = muminus_dir + "_VarWidth/";
+  string muminus_dir;
+  muminus_dir      = mu_dir + "FastPlots_WM_Syst_" + systematics + "_" + strDirection + "_" + variable;
+  muminus_dir      = muminus_dir + "_JetPt_30_VarWidth/";
+
   //files
   string muminus_unf_file = muminus_dir + mu_unf_file;
+  cout << "Visiting for WM :  2. " << muminus_unf_file << endl;
+  
 
   //tfiles and histos
   TFile *muminus_unf_tfile          = new TFile (muminus_unf_file.c_str(),"READ");
@@ -91,22 +155,39 @@ int main(int argc, char* argv[]){
   
   TH1D  *muminus_unf_coarser_histo  = new TH1D ("","",nlepEta_ZincNjet_coarserbins, lepEta_ZincNjet_coarserbins);
   muminus_unf_coarser_histo         = finer_to_coarser_error_prop(muminus_unf_finer_histo);
-  
+ 
+  //######## Add -ve eta entries with +ve eta entries ########//
+  TH1D *mtop_added_muminus_histo   = new TH1D ("","",nlepEta_ZincNjet_coarserbins_pside,lepEta_ZincNjet_coarserbins_pside);
+  mtop_added_muminus_histo         = add_mtop(muminus_unf_coarser_histo);
+ 
   //####    ASYM   ####//
   TH1D *asym_histo              = new TH1D ("","",nlepEta_ZincNjet_coarserbins,lepEta_ZincNjet_coarserbins);
-  asym_histo                    = getAsym(muplus_unf_coarser_histo,muminus_unf_coarser_histo);
-  
-  //DELETE LATER BELOW
-  TH1D *asym_histo_finer        = new TH1D("","",nlepEta_ZincNjet_finerbins,lepEta_ZincNjet_finerbins);
-  asym_histo_finer              = getAsymFiner(muplus_unf_finer_histo,muminus_unf_finer_histo);
-  for(int kk=1; kk<=asym_histo_finer->GetNbinsX(); kk++){
-    cout << kk                                        << "  "
-         << lepEta_ZincNjet_finerbins[kk-1]           << "  "
-         << lepEta_ZincNjet_finerbins[kk]             << "  "   
-         << muplus_unf_finer_histo->GetBinContent(kk)  << "  "
-         << muminus_unf_finer_histo->GetBinContent(kk) << "  " 
-         << asym_histo_finer->GetBinContent(kk)       << endl;
+  asym_histo                    = getAsym(mtop_added_muplus_histo,mtop_added_muminus_histo);
+
+  for(int i=1; i<=asym_histo->GetNbinsX(); i++){
+    cout << lepEta_ZincNjet_coarserbins_pside[i-1]             << "\t"
+         << lepEta_ZincNjet_coarserbins_pside[i]               << "\t"
+         << mtop_added_muplus_histo->GetBinContent(i)          << "\t"
+         << mtop_added_muplus_histo->GetBinError(i)            << "\t"
+         << mtop_added_muminus_histo->GetBinContent(i)         << "\t"
+         << mtop_added_muminus_histo->GetBinError(i)           << "\t"
+         << asym_histo->GetBinContent(i)                       << "\t"
+         << asym_histo->GetBinError(i)
+         << endl;
   }
+  exit(0); 
+ 
+  //DELETE LATER BELOW
+  ////TH1D *asym_histo_finer        = new TH1D("","",nlepEta_ZincNjet_finerbins,lepEta_ZincNjet_finerbins);
+  ////asym_histo_finer              = getAsymFiner(muplus_unf_finer_histo,muminus_unf_finer_histo);
+  ////for(int kk=1; kk<=asym_histo_finer->GetNbinsX(); kk++){
+    ////cout << kk                                        << "  "
+         ////<< lepEta_ZincNjet_finerbins[kk-1]           << "  "
+         ////<< lepEta_ZincNjet_finerbins[kk]             << "  "   
+         ////<< muplus_unf_finer_histo->GetBinContent(kk)  << "  "
+         ////<< muminus_unf_finer_histo->GetBinContent(kk) << "  " 
+         ////<< asym_histo_finer->GetBinContent(kk)       << endl;
+  ////}
   //DELETE LATER ABOVE
 
 
