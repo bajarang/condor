@@ -64,7 +64,8 @@ int main(int argc, char* argv[]){
   vector<string> filePath;
   stringstream strStreamFileName;
 
-  for(int i=1; i<=928; i++){
+  //for(int i=1; i<=928; i++){
+  for(int i=1; i<=102; i++){
     inputFile >> strdoWhat >> strCI >> strTotEvents >> strEvents >> strPartition >> strCurretPar >> strFileName;
     if(i==lineNum){
       strStreamFileName << strFileName;
