@@ -88,7 +88,7 @@ eval `scram runtime -sh`
 cp /tmp/x509up_u51603 ~/     ###UNCOMMENT THIS
 
 #--- create log directory ---#
-log="log_"
+log="log102_"
 logDir=$log${Input_DB_Summary_File/.txt/""}
 baseDir="/home/bsutar/t3store2/condor/condor_log/" # provide base path for log directory 
 mkdir $baseDir$logDir               # make a proper log directory 
