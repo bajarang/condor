@@ -31,7 +31,7 @@ int main(int argc, char* argv[]){
   }
 
   // 0. provide path of the input files which we want to add
-  string pathDir = "/home/bsutar/t3store2/MuonChargeAsymAnalysis8TeV2012/Results/HistoFiles/Condor/";
+  string pathDir = "/home/bsutar/t3store2/MuonChargeAsymAnalysis8TeV2012/Results/HistoFiles/Condor/102/";
 
   // 1. parse charge
   stringstream charge;
@@ -75,11 +75,25 @@ int main(int argc, char* argv[]){
 
   int beginRange[14]={0};
   int endRange[14]={0};
-  beginRange[0]  =   1; endRange[0]  = 579;  //                      "Data" 
-  beginRange[1]  =   1; endRange[1]  =   6;  //                    "TTJets"
-  beginRange[2]  =   1; endRange[2]  =   2;  //                        "ZZ"
-  beginRange[3]  =   1; endRange[3]  =   4;  //                        "WZ"
-  beginRange[4]  =   1; endRange[4]  =   5;  //                        "WW"
+////  beginRange[0]  =   1; endRange[0]  = 579;  //                      "Data" 
+////  beginRange[1]  =   1; endRange[1]  =   6;  //                    "TTJets"
+////  beginRange[2]  =   1; endRange[2]  =   2;  //                        "ZZ"
+////  beginRange[3]  =   1; endRange[3]  =   4;  //                        "WZ"
+////  beginRange[4]  =   1; endRange[4]  =   5;  //                        "WW"
+////  beginRange[5]  =   1; endRange[5]  =   1;  //                       "T_s"
+////  beginRange[6]  =   1; endRange[6]  =   1;  //                       "T_t"
+////  beginRange[7]  =   1; endRange[7]  =   1;  //                      "T_tW"
+////  beginRange[8]  =   1; endRange[8]  =   1;  //                    "Tbar_s"
+////  beginRange[9]  =   1; endRange[9]  =   1;  //                    "Tbar_t"
+////  beginRange[10] =   1; endRange[10] =   1;  //                   "Tbar_tW"
+////  beginRange[11] =   1; endRange[11] =   1;  //              "DYJets10to50"
+////  beginRange[12] =   1; endRange[12] =  85;  //      "DYJets_MIX_UNFOLDING" 
+////  beginRange[13] =   1; endRange[13] = 239;  //    "WJetsALL_MIX_UNFOLDING"
+  beginRange[0]  =   1; endRange[0]  =  58;  //                      "Data" 
+  beginRange[1]  =   1; endRange[1]  =   1;  //                    "TTJets"
+  beginRange[2]  =   1; endRange[2]  =   1;  //                        "ZZ"
+  beginRange[3]  =   1; endRange[3]  =   1;  //                        "WZ"
+  beginRange[4]  =   1; endRange[4]  =   1;  //                        "WW"
   beginRange[5]  =   1; endRange[5]  =   1;  //                       "T_s"
   beginRange[6]  =   1; endRange[6]  =   1;  //                       "T_t"
   beginRange[7]  =   1; endRange[7]  =   1;  //                      "T_tW"
@@ -87,8 +101,8 @@ int main(int argc, char* argv[]){
   beginRange[9]  =   1; endRange[9]  =   1;  //                    "Tbar_t"
   beginRange[10] =   1; endRange[10] =   1;  //                   "Tbar_tW"
   beginRange[11] =   1; endRange[11] =   1;  //              "DYJets10to50"
-  beginRange[12] =   1; endRange[12] =  85;  //      "DYJets_MIX_UNFOLDING" 
-  beginRange[13] =   1; endRange[13] = 239;  //    "WJetsALL_MIX_UNFOLDING"
+  beginRange[12] =   1; endRange[12] =   9;  //      "DYJets_MIX_UNFOLDING" 
+  beginRange[13] =   1; endRange[13] =  24;  //    "WJetsALL_MIX_UNFOLDING"
 
 
   bool validSample = false;
@@ -198,6 +212,7 @@ int main(int argc, char* argv[]){
   ////cout << index << "  " << beginRange[index] << "  " << endRange[index] << endl;
   string mergeIntoThisFile = "";
   mergeIntoThisFile = generateFileNames(strCharge,listSamples[index],doQCD,strSyst,strDir,"Merge");  
+  cout << "Merge into this file : " << mergeIntoThisFile << endl;
   string longStrFileToMerge = "";
   for(int ii=beginRange[index]; ii<=endRange[index]; ii++){
     ////cout << ii << endl;
