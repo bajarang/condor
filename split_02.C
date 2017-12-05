@@ -21,7 +21,7 @@
 
 void split_02() { 
   int  doWhatType[14];
-  int  idivision = 200000; 
+  int  idivision = 2000000; 
 
   string input_path, output_path;
   string input_file[14], output_file;
@@ -30,7 +30,7 @@ void split_02() {
 
   extn1 = ".root";  extn2= "_00001";
   input_path  = "/home/bsutar/t3store2/Asym8TeV/DataW/";
-  output_path = "/home/bsutar/t3store2/Asym8TeV/DataW/split_root_files/";
+  output_path = "/home/bsutar/t3store2/Asym8TeV/DataW/split_root_files_copy2/";
 
   input_file[0]  = "SMu_8TeV_Data_dR_5311";                       //Data Sample
   input_file[1]  = "SMu_8TeV_TTJets_dR_5311";
@@ -98,7 +98,7 @@ void split_02() {
     int isize5 = a5.size();
     string b5 = a5.substr(isize5-5, 5) + "   ";
 
-    //////for(int i=1; (i<iSplit+1 && i<4); i++){
+    ////for(int i=1; (i<iSplit+1 && i<4); i++){
     for(int i=1; i<(iSplit+1); i++){
       int i1 = (i-1)*idivision + 1;
       int i2 = i1 + idivision - 1;
@@ -134,8 +134,8 @@ void split_02() {
       std::stringstream ss4;  ss4<<idivision;
       string a6 = "0000" + ss4.str();
       int isize6 = a6.size();
-      string b6 = a6.substr(isize6-6, 6) + "   ";
-      cout << isize6 << endl;
+      string b6 = a6.substr(isize6-7, 7) + "   ";
+      cout << isize6 << "  " << b6 << endl;
 
       //b3=doWhat
       //b2=Current Cumulative File Count over all input files
