@@ -5,7 +5,7 @@
  * 3. It then generates the names of output histogram files and saves those locally
  * -----------------------------------------------------------------------------
  * compile like this : g++ validateGeneratedOutput.cc -o validateGeneratedOutput
- * Use like this     : ./validateGeneratedOutput 1 
+ * Use like this     : ./validateGeneratedOutput WCHARGE LINENUM SYSTEMATICS DIRECTION 
  * -----------------------------------------------------------------------------
  */
 
@@ -22,9 +22,9 @@ int main(int argc, char* argv[]){
 
   // Part 1.
   //////////////Exit if not correct number of arguments are passed////////////////////
-  if(argc!=3){
+  if(argc!=5){
     cout << "Please provide the charge and the line number to read " << endl;
-    cout << "Eg. \n\t $ ./toRead_Input_DB_Summary 1 20" << endl;
+    cout << "Eg. \n\t $ ./toRead_Input_DB_Summary 1 20 0 0" << endl;
     cout << "Exiting Now." << endl;
     exit(0);
   }
@@ -134,7 +134,7 @@ int main(int argc, char* argv[]){
 
   /////////////////save the generate histogram filenames in a separate file////////////////
   string strSaveGeneratedFileNames;  
-  strSaveGeneratedFileNames = "ExpectedFiles/ExpectedFiles_";
+  strSaveGeneratedFileNames = "ExpectedFiles/ExpectedFiles_102_";
   if(WCharge==1){
     strSaveGeneratedFileNames = strSaveGeneratedFileNames + "WP_";
   }
