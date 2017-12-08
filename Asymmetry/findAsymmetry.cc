@@ -1,9 +1,9 @@
 /*
  * This script takes three arguements : variable range and closureTest and finds the Muon Charge Asymmetry on Unfolded level 
  * Compile with :
- * $ g++ asymmetry_unfolding.cc -o asymmetry_unfolding validateSystNDirection.cc getAsym.cc getAsymFiner.cc fold_mside.cc fold_pside.cc finer_to_coarser_error_prop.cc add_mtop.cc `root-config --glibs --cflags` 
+ * $ g++ findAsymmetry.cc -o findAsymmetry validateSystNDirection.cc getAsym.cc getAsymFiner.cc fold_mside.cc fold_pside.cc finer_to_coarser_error_prop.cc add_mtop.cc `root-config --glibs --cflags` 
  * Run with :
- * $ ./asymmetry_unfolding type variable range closureTest systematics direction
+ * $ ./findAsymmetry type variable range closureTest systematics direction
  */
 
 
@@ -135,7 +135,7 @@ int main(int argc, char* argv[]){
   TH1D  *muminus_finer_histo;
   if(type=="UNF"){
     //dir
-    mu_dir          = "/home/bsutar/t3store2/MuonChargeAsymAnalysis8TeV2012/Results/PNGFiles/Condor/";  
+    mu_dir          = "/home/bsutar/t3store2/MuonChargeAsymAnalysis8TeV2012/Results/PNGFiles/Condor/102/";  
     muplus_dir      = mu_dir + "FastPlots_WP_Syst_" + systematics + "_" + strDirection + "_" + variable;
     muplus_dir      = muplus_dir + "_JetPt_30_VarWidth/";
     muminus_dir     = mu_dir + "FastPlots_WM_Syst_" + systematics + "_" + strDirection + "_" + variable;
@@ -166,7 +166,7 @@ int main(int argc, char* argv[]){
   else if(type=="GEN" || type=="RECO" || type=="DATA"){
     if(type!="DATA"){
       //dir
-      mu_dir          = "/home/bsutar/t3store2/MuonChargeAsymAnalysis8TeV2012/Results/HistoFiles/Condor/";  
+      mu_dir          = "/home/bsutar/t3store2/MuonChargeAsymAnalysis8TeV2012/Results/HistoFiles/Condor/102/";  
       //file
       muplus_file     = mu_dir + "SMu_8TeV_WJetsALL_MIX_UNFOLDING_dR_5311_WP_EffiCorr_1_TrigCorr_1_Syst_" + systematics + "_" + strDirection + "_JetPtMin_30_VarWidth_BVeto_QCD0_MET15_mT50_Merge.root";
       muminus_file    = mu_dir + "SMu_8TeV_WJetsALL_MIX_UNFOLDING_dR_5311_WM_EffiCorr_1_TrigCorr_1_Syst_" + systematics + "_" + strDirection + "_JetPtMin_30_VarWidth_BVeto_QCD0_MET15_mT50_Merge.root";
@@ -197,7 +197,7 @@ int main(int argc, char* argv[]){
     }
     else {
       //dir
-      mu_dir          = "/home/bsutar/t3store2/MuonChargeAsymAnalysis8TeV2012/Results/HistoFiles/Condor/";  
+      mu_dir          = "/home/bsutar/t3store2/MuonChargeAsymAnalysis8TeV2012/Results/HistoFiles/Condor/102/";  
       //file
       muplus_file     = mu_dir + "SMu_8TeV_Data_dR_5311_WP_EffiCorr_0_TrigCorr_1_Syst_" + systematics + "_" + strDirection + "_JetPtMin_30_VarWidth_BVeto_QCD0_MET15_mT50_Merge.root";
       muminus_file    = mu_dir + "SMu_8TeV_Data_dR_5311_WM_EffiCorr_0_TrigCorr_1_Syst_" + systematics + "_" + strDirection + "_JetPtMin_30_VarWidth_BVeto_QCD0_MET15_mT50_Merge.root";
