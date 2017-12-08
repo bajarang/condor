@@ -5,6 +5,7 @@
  * 3. Counts the number of events, if does not match from expected then halts
  * Compile with : $ g++ check2.cc -o check2 `root-config --glibs --cflags`
  * Run     with : $ ./check2 systematics direction
+ * ************  WARNING USE LATEST VERSION OF ROOT ************ 
  */
 
 #define  DEBUG 1
@@ -27,6 +28,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
+  
   
   // 0a. Checks if correct arguments are passed or not
   if(argc!=4){
@@ -100,7 +102,7 @@ int main(int argc, char* argv[]){
     filename = vectorOfGeneratedFileNames.at(ii);
     struct stat buf;
     if (stat(filename.c_str(), &buf) != -1){
-      cout << filename << " --> file exists." << endl;
+      //cout << filename << " --> file exists." << endl;
     }
     else{
       cout << filename << " --> file does not exist." << endl;
@@ -108,108 +110,66 @@ int main(int argc, char* argv[]){
       unpProcessedFilesExist = true;
     }
   }
+  
   if(unpProcessedFilesExist) {
-    cout << "Unprocessed file(s) exist, please visit " << unpFiles << " for more details, check the time-stamp" << endl;
+    cout << "Unprocessed file(s) exist, please visit " <<  storeUnpFiles << " for more details, check the time-stamp" << endl;
     cout << "Exiting now." << endl;
     exit(0);
   } 
-
-  // 2. Tells whether the generated root files are not corrupt, if yes then halts
-
-
-
-  // 3. Counts the number of events, if does not match from expected then halts
+   
   
-  /*
-  string dirOfOutputFiles="/home/bsutar/t3store/Asym2016-8TeV/Results/HistoFiles/wplus/CENTRAL/102/";  
-  
-  if(quickTest) {
-    TFile *f = new TFile ("/home/bsutar/t3store/Asym2016-8TeV/Results/HistoFiles/wplus/CENTRAL/trial/SMu_8TeV_Data_dR_5311_00001_EffiCorr_0_TrigCorr_1_Syst_0_CN_JetPtMin_30_VarWidth_BVeto_QCD0_MET15_mT50.root","READ");
-    TH1D* h = (TH1D*)f->Get("NVtx");
-    cout << h->GetEntries() << endl;
-    exit(0);
-  }
+  // 2. Tells whether the generated root files are not corrupt and count events
+  string sampleList[14]    = {"_Data_","_TTJets_","_ZZ_","_WZ_","_WW_","_T_s_","_T_t_","_T_tW_","_Tbar_s_",
+                              "_Tbar_t_","_Tbar_tW_","_DYJets10to50_","_DYJets_MIX","_WJetsALL_"};
 
+  int sampleListEvents[4][14] = {{0}};
 
-  /////////////////later//////////////////  
-  map <string, int> mapOfSamplesEntries;  //empty map container
-  //insert elements in random order
-  mapOfSamplesEntries.insert(pair <string, int> ("_Data_",-1));
-  mapOfSamplesEntries.insert(pair <string, int> ("_TTJets_",-1));
-  mapOfSamplesEntries.insert(pair <string, int> ("_ZZ_",-1));
-  mapOfSamplesEntries.insert(pair <string, int> ("_WZ_",-1));
-  mapOfSamplesEntries.insert(pair <string, int> ("_WW_",-1));
-  mapOfSamplesEntries.insert(pair <string, int> ("_T_s_",-1));
-  mapOfSamplesEntries.insert(pair <string, int> ("_T_t_",-1));
-  mapOfSamplesEntries.insert(pair <string, int> ("_T_tW_",-1));
-  mapOfSamplesEntries.insert(pair <string, int> ("_Tbar_s_",-1));
-  mapOfSamplesEntries.insert(pair <string, int> ("_Tbar_t_",-1));
-  mapOfSamplesEntries.insert(pair <string, int> ("_Tbar_tW_",-1));
-  mapOfSamplesEntries.insert(pair <string, int> ("_DYJets10to50_",-1));
-  mapOfSamplesEntries.insert(pair <string, int> ("_WJetsALL_",-1));
-  //////////loop for opening each file (containing filenames) here//////////
-  for(int fileNum=1; fileNum<=35; fileNum++){ ////UNCOMMENT
-                    //change to this full list later
-  ////for(int fileNum=1; fileNum<2; fileNum++){
-    stringstream strStreamLineNum;
-    strStreamLineNum << fileNum;
-    string strFileName = pathFilesOfFilenames + "ExpectedFiles_" + strStreamLineNum.str() + ".log";
-    //count line numbers in such numbered file, this is needed because we want to run a loop later over it
-    string command = "wc -l ";
-    string prefixFileName = strFileName + " > counter.txt"; 
-    command = command + prefixFileName.c_str();
-    system(command.c_str()); 
-    ifstream counterFile("counter.txt");
-    int lineCounter = 0;
-    string lineContent;
-    counterFile >> lineCounter >> lineContent; 
-    cout << "There are " << lineCounter <<  " lines inside : " << strFileName << endl;
-    counterFile.close();
-    //now open each file and read filename 
-    ifstream infile(strFileName.c_str());
-    
-    
-    //for(int lineNum=1; lineNum<=lineCounter; lineNum++) ////UNCOMMENT
-    for(int lineNum=1; lineNum<2; lineNum++){
-      string strFullFileName;
-      infile >> strFullFileName;
-      map <string, int> :: iterator itr;
-      
-      for(itr = mapOfSamplesEntries.begin(); itr != mapOfSamplesEntries.end(); ++itr){
-        if(strFullFileName.find(itr->first)!=string::npos && strFullFileName.find("Syst_0_CN_JetPtMin_30_VarWidth_BVeto_QCD0")!=string::npos){
-          strFullFileName = pathOfGeneratedFiles + strFullFileName;
-          cout << strFullFileName << endl;
-          TFile *inrootfile = new TFile(strFullFileName.c_str(),"READ");
-          if(!inrootfile) cout << "Error opening file : " << strFullFileName << endl;
-          if(inrootfile){
-            if (DEBUG) cout << "Opening File : " << strFullFileName << endl;
-            //TH1D *h = (TH1D*)inrootfile->Get("NVtx"); 
-            TH1D *h = (TH1D*)inrootfile->Get("nentries"); 
-            if(itr->second == -1 ){
-              itr->second = itr->second + h->GetEntries() + 1;
-            }
-            else{
-              itr->second = itr->second + h->GetEntries();
-            }
-            cout << itr->first << "  " << itr->second << endl;
+  for(int ii=0; ii<vectorOfGeneratedFileNames.size(); ii++){ 
+    string filename;
+    filename = vectorOfGeneratedFileNames.at(ii);
+    TFile *inrootfile = new TFile (filename.c_str(),"READ");
+    if(!inrootfile) cout << "Error opening file : " << filename << endl;
+    else{
+      for(int jj=0; jj<14; jj++){
+        for(int kk=0; kk<4; kk++){
+          string strDoQCD="QCD";
+          stringstream strStreamDoQCD;
+          strStreamDoQCD << strDoQCD;
+          strStreamDoQCD << kk;
+          strDoQCD = strStreamDoQCD.str();
+          if(filename.find(sampleList[jj])!=string::npos && filename.find(strDoQCD)!=string::npos){
+            //TH1D *h = (TH1D*)inrootfile->Get("nentries"); 
+            TH1D *h = (TH1D*)inrootfile->Get("lepEta_Zinc0jet"); 
+            sampleListEvents[kk][jj] = sampleListEvents[kk][jj] + h->GetEntries();         
           }
-           
-          inrootfile->Close();
         }
       }
-      strFullFileName=""; 
     }
-     
+    inrootfile->Close();
   }
   
-  int counter = 0;
-  double nentries[14] = {60000,60000,60000,60000,60000,60000,60000,60000,60000,60000,60000,60000,60000,60000};
-  map <string, int> :: iterator itrOut;
-  for(itrOut = mapOfSamplesEntries.begin(); itrOut != mapOfSamplesEntries.end(); ++itrOut){
-    cout << "Final Entries in : " << setw(20) << itrOut->first  << "  =  " << setw(10) << itrOut->second << " Original nentries : " << nentries[counter] << endl;
-    counter++;
+  // 3. Counts the number of events, if does not match from expected then halts
+  double nentries[14] = {115698277,1069869,253413,640592,991539,18887,269558,71509,10279,146031,70718,120533,16804803,47601882};
+  for(int kk=0; kk<4; kk++){
+    string strDoQCD="QCD";
+    stringstream strStreamDoQCD;
+    strStreamDoQCD << strDoQCD;
+    strStreamDoQCD << kk;
+    strDoQCD = strStreamDoQCD.str();
+    cout << "*******************************************************" << endl;
+    cout << "                    " << strDoQCD << "                 " << endl; 
+    cout << "-------------------------------------------------------" << endl;
+    cout << setw(20) << left << "Sample" << setw(20) << left << "Obtained" << setw(20) << left << "Expected" << endl;
+    cout << "-------------------------------------------------------" << endl;
+    for(int jj=0; jj<14; jj++){
+      cout << fixed << setprecision(0) << setw(20) << left << sampleList[jj] << setw(20) << left << sampleListEvents[kk][jj] << setw(20) << left << nentries[jj] << endl;
+    }
+    cout << "-------------------------------------------------------" << endl;
   }
-  */   
+  cout << endl;
+  cout << "Please visit this file to see if any jobs have failed or not, check the time-stamp --> " << endl;
+  cout << storeUnpFiles << endl;
+  cout << endl;
   return 0;
   
 }
