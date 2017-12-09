@@ -3,8 +3,8 @@
  * 1. Splits which files are unprocessed and halts from further processing
  * 2. Tells whether the generated root files are not corrupt, if yes then halts
  * 3. Counts the number of events, if does not match from expected then halts
- * Compile with : $ g++ check2.cc -o check2 `root-config --glibs --cflags`
- * Run     with : $ ./check2 systematics direction
+ * Compile with : $ g++ check2.cc -o check2 generateFileNamesVectors.cc `root-config --glibs --cflags`
+ * Run     with : $ ./check2 charge systematics direction
  * ************  WARNING USE LATEST VERSION OF ROOT ************ 
  */
 
@@ -29,7 +29,7 @@ using namespace std;
 
 int main(int argc, char* argv[]){
   
-  
+  cout << "Executing check2" << endl; 
   // 0a. Checks if correct arguments are passed or not
   if(argc!=4){
     cout << "Please provide the charge, systematics and direction values as arguments" << endl;
@@ -47,7 +47,6 @@ int main(int argc, char* argv[]){
   }
 
   // 0c. Check if systematics and direction values are valid 
-  bool validSyst = false;
   string strSystematics;
   strSystematics = argv[2];
   stringstream strStreamSystematics;
@@ -55,7 +54,6 @@ int main(int argc, char* argv[]){
   int intSystematics;
   strStreamSystematics >> intSystematics;
 
-  bool validDir = false;
   string strDirection;
   strDirection = argv[3];
   stringstream strStreamDirection;
@@ -63,26 +61,13 @@ int main(int argc, char* argv[]){
   int intDirection;
   strStreamDirection >> intDirection;
 
-  const int nPossibleSyst(20);
-  short possibleSystList[nPossibleSyst] = {0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 9, 10, 11, 11};
-  short possibleDirList[nPossibleSyst]  = {0,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1, 1,  1,  1, -1};
-
-  for(int ii=0; ii<nPossibleSyst; ii++){
-    if(possibleSystList[ii]==intSystematics && possibleDirList[ii]==intDirection){
-      validSyst = true; validDir = true;
-    }
-    if (validSyst && validDir) continue; 
-  }
-  if (!validSyst && !validDir){
-    cout << "Passed systematics value is not among the acceptable systematics values list, exiting now." << endl << endl;
-    exit(0);
-  }
-
   // 1. Splits which files are unprocessed and halts from further checks
   // 1a. Begin generating filenames, make use of Input_DB_Summary file
   // 1ai. Based on the values of charge, systematics and direction, generate filenames
   vector<string> vectorOfGeneratedFileNames;
   generateFileNamesVectors(strWCharge, strSystematics, strDirection, vectorOfGeneratedFileNames);
+
+  cout << "Size : " << vectorOfGeneratedFileNames.size() << endl;
 
   string storeUnpFiles = "UnprocessedFiles/UnprocessedFiles.txt";
   ofstream unpFiles;
@@ -117,7 +102,6 @@ int main(int argc, char* argv[]){
     exit(0);
   } 
    
-  
   // 2. Tells whether the generated root files are not corrupt and count events
   string sampleList[14]    = {"_Data_","_TTJets_","_ZZ_","_WZ_","_WW_","_T_s_","_T_t_","_T_tW_","_Tbar_s_",
                               "_Tbar_t_","_Tbar_tW_","_DYJets10to50_","_DYJets_MIX","_WJetsALL_"};
@@ -138,9 +122,8 @@ int main(int argc, char* argv[]){
           strStreamDoQCD << kk;
           strDoQCD = strStreamDoQCD.str();
           if(filename.find(sampleList[jj])!=string::npos && filename.find(strDoQCD)!=string::npos){
-            //TH1D *h = (TH1D*)inrootfile->Get("nentries"); 
-            TH1D *h = (TH1D*)inrootfile->Get("lepEta_Zinc0jet"); 
-            sampleListEvents[kk][jj] = sampleListEvents[kk][jj] + h->GetEntries();         
+            TH1D *h = (TH1D*)inrootfile->Get("nEntriesHisto"); 
+            sampleListEvents[kk][jj] = sampleListEvents[kk][jj] + h->Integral();         
           }
         }
       }
