@@ -22,6 +22,53 @@ void generateFileNamesVectors(string strWCharge, string strSystematics, string s
   vector<string> filePath;
   stringstream strStreamFileName;
 
+  // decide if systematics match
+  stringstream strStreamSystematics;
+  strStreamSystematics << strSystematics;
+  int intSystematics = 0;
+  strStreamSystematics >> intSystematics;
+
+  stringstream strStreamDirection;
+  strStreamDirection << strDirection;
+  int intDirection = 0;
+  strStreamDirection >> intDirection;
+
+  const int NSystData(3);
+  short dataSyst[NSystData]  = {0, 2, 2};
+  short dataDir[NSystData]   = {0,-1, 1};
+  const int NSystWJets(18);
+  short wjSyst[NSystWJets]   = {0, 1, 1, 5, 5, 6, 6, 7, 7, 4, 4, 8, 9, 10, 11, 11};
+  short wjDir[NSystWJets]    = {0,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1, 1,  1,  1, -1};
+  const int NSystBkgd(12);
+  short bgSyst[NSystBkgd]    = {0, 1, 1, 3, 3, 5, 5, 6, 6, 7, 7, 8};
+  short bgDir[NSystBkgd]     = {0,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1};
+
+  bool validData = false;
+  bool validWJets = false;
+  bool validBkgd = false;
+
+  for(int ii=0; ii<NSystData; ii++){
+    if(dataSyst[ii]==intSystematics && dataDir[ii]==intDirection){
+      validData = true;
+    }
+  }
+  for(int jj=0; jj<NSystWJets; jj++){
+    if(wjSyst[jj]==intSystematics && wjDir[jj]==intDirection){
+      validWJets = true;
+    }
+  }
+  for(int kk=0; kk<NSystBkgd; kk++){
+    if(bgSyst[kk]==intSystematics && bgDir[kk]==intDirection){
+      validBkgd = true;
+    }
+  }
+ 
+  cout << "Here : " << validData << "  " << validWJets << "  " << validBkgd << endl;
+  if (!validData && !validWJets && ! validBkgd){
+    cout << "Passed systematics value is not among the acceptable systematics values list, exiting now." << endl << endl;
+    exit(0);
+  }
+  
   // prepare the string to append 
   stringstream beginAppendString;
   stringstream midAppendString;
@@ -57,9 +104,10 @@ void generateFileNamesVectors(string strWCharge, string strSystematics, string s
     if(strWCharge=="1") {
       beginAppendString << "_WP";
     }
-    if(strWCharge=="-1"){
+    else {
       beginAppendString << "_WM";
     }
+
     if(trimmedFileName.find("_Data_")!=string::npos) {
       beginAppendString << "_EffiCorr_0";
       beginAppendString << "_TrigCorr_1";
@@ -70,7 +118,7 @@ void generateFileNamesVectors(string strWCharge, string strSystematics, string s
     }
  
     //cout << trimmedFileName << endl;
-    if(trimmedFileName.find("_Data_")!=string::npos) {
+    if(trimmedFileName.find("_Data_")!=string::npos && validData) {
       for(int j=0; j<4; j++){
         if (strDirection == "0"){
           string goesInsideVector="";
@@ -92,7 +140,7 @@ void generateFileNamesVectors(string strWCharge, string strSystematics, string s
         }
       }
     }
-    else if(trimmedFileName.find("_WJetsALL_")!=string::npos) {
+    else if(trimmedFileName.find("_WJetsALL_")!=string::npos && validWJets) {
       for(int j=0; j<4; j++){
         if (strDirection == "0"){
           string goesInsideVector="";
@@ -114,25 +162,27 @@ void generateFileNamesVectors(string strWCharge, string strSystematics, string s
         }
       }
     }
-    else {
-      for(int j=0; j<4; j++){
-        if (strDirection == "0"){
-          string goesInsideVector="";
-          stringstream doQCD;
-          doQCD << j;
-          vectorOfGeneratedFileNames.push_back(dirPath + trimmedFileName + beginAppendString.str() + "_Syst_" + strSystematics + "_CN" + midAppendString.str() + doQCD.str() + endAppendString.str());
-        }
-        else if (strDirection > "1"){
-          string goesInsideVector="";
-          stringstream doQCD;
-          doQCD << j;
-          vectorOfGeneratedFileNames.push_back(dirPath + trimmedFileName + beginAppendString.str() + "_Syst_" + strSystematics + "_UP" + midAppendString.str() + doQCD.str() + endAppendString.str());
-        }
-        else {
-          string goesInsideVector="";
-          stringstream doQCD;
-          doQCD << j;
-          vectorOfGeneratedFileNames.push_back(dirPath + trimmedFileName + beginAppendString.str() + "_Syst_" + strSystematics + "_DN" + midAppendString.str() + doQCD.str() + endAppendString.str());
+    if(trimmedFileName.find("_Data_")==string::npos && trimmedFileName.find("_WJetsALL_")==string::npos){
+      if(validBkgd){
+        for(int j=0; j<4; j++){
+          if (strDirection == "0"){
+            string goesInsideVector="";
+            stringstream doQCD;
+            doQCD << j;
+            vectorOfGeneratedFileNames.push_back(dirPath + trimmedFileName + beginAppendString.str() + "_Syst_" + strSystematics + "_CN" + midAppendString.str() + doQCD.str() + endAppendString.str());
+          }
+          else if (strDirection > "1"){
+            string goesInsideVector="";
+            stringstream doQCD;
+            doQCD << j;
+            vectorOfGeneratedFileNames.push_back(dirPath + trimmedFileName + beginAppendString.str() + "_Syst_" + strSystematics + "_UP" + midAppendString.str() + doQCD.str() + endAppendString.str());
+          }
+          else {
+            string goesInsideVector="";
+            stringstream doQCD;
+            doQCD << j;
+            vectorOfGeneratedFileNames.push_back(dirPath + trimmedFileName + beginAppendString.str() + "_Syst_" + strSystematics + "_DN" + midAppendString.str() + doQCD.str() + endAppendString.str());
+          }
         }
       }
     }
