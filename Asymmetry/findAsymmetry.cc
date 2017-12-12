@@ -1,5 +1,6 @@
 /*
- * This script takes three arguements : variable range and closureTest and finds the Muon Charge Asymmetry on Unfolded level 
+ * This script takes six arguements : type variable range closureTest systematics direction
+ * and finds the Muon Charge Asymmetry
  * Compile with :
  * $ g++ findAsymmetry.cc -o findAsymmetry validateSystNDirection.cc getAsym.cc getAsymFiner.cc fold_mside.cc fold_pside.cc finer_to_coarser_error_prop.cc add_mtop.cc `root-config --glibs --cflags` 
  * Run with :
@@ -8,6 +9,7 @@
 
 
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include "TApplication.h"
 #include "TStyle.h"
@@ -187,6 +189,7 @@ int main(int argc, char* argv[]){
       if(type=="GEN") {
         string genVariable;
         genVariable = "gen" + variable;
+        cout << genVariable << endl;
         muplus_finer_histo    = (TH1D*)muplus_tfile->Get(genVariable.c_str());
         muminus_finer_histo   = (TH1D*)muminus_tfile->Get(genVariable.c_str());
       }
@@ -246,14 +249,15 @@ int main(int argc, char* argv[]){
   asym_histo                      = getAsym(mtop_added_muplus_histo,mtop_added_muminus_histo);
 
   for(int i=1; i<=asym_histo->GetNbinsX(); i++){
-    cout << lepEta_ZincNjet_coarserbins_pside[i-1]             << "\t"
-         << lepEta_ZincNjet_coarserbins_pside[i]               << "\t"
-         << mtop_added_muplus_histo->GetBinContent(i)          << "\t"
-         << mtop_added_muplus_histo->GetBinError(i)            << "\t"
-         << mtop_added_muminus_histo->GetBinContent(i)         << "\t"
-         << mtop_added_muminus_histo->GetBinError(i)           << "\t"
-         << asym_histo->GetBinContent(i)                       << "\t"
-         << asym_histo->GetBinError(i)
+    cout << fixed
+         << setprecision(2) << lepEta_ZincNjet_coarserbins_pside[i-1]             << "\t"
+         << setprecision(2) << lepEta_ZincNjet_coarserbins_pside[i]               << "\t"
+         << setprecision(0) << mtop_added_muplus_histo->GetBinContent(i)          << "\t"
+         << setprecision(0) << mtop_added_muplus_histo->GetBinError(i)            << "\t"
+         << setprecision(0) << mtop_added_muminus_histo->GetBinContent(i)         << "\t"
+         << setprecision(0) << mtop_added_muminus_histo->GetBinError(i)           << "\t"
+         << setprecision(4) << 100*asym_histo->GetBinContent(i)                       << "\t"
+         << setprecision(4) << 100*asym_histo->GetBinError(i)
          << endl;
   }
   exit(0); 
