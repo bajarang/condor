@@ -50,7 +50,7 @@ withinRange=false
 echo $Range
 for ii in {0..5}
 do 
-  if [ ${rangeArray[ii]} == $Range ]
+  if [[ ${rangeArray[ii]} == $Range ]]
   then
     withinRange=true
   fi
