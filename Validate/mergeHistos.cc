@@ -75,20 +75,6 @@ int main(int argc, char* argv[]){
 
   int beginRange[14]={0};
   int endRange[14]={0};
-////  beginRange[0]  =   1; endRange[0]  = 579;  //                      "Data" 
-////  beginRange[1]  =   1; endRange[1]  =   6;  //                    "TTJets"
-////  beginRange[2]  =   1; endRange[2]  =   2;  //                        "ZZ"
-////  beginRange[3]  =   1; endRange[3]  =   4;  //                        "WZ"
-////  beginRange[4]  =   1; endRange[4]  =   5;  //                        "WW"
-////  beginRange[5]  =   1; endRange[5]  =   1;  //                       "T_s"
-////  beginRange[6]  =   1; endRange[6]  =   1;  //                       "T_t"
-////  beginRange[7]  =   1; endRange[7]  =   1;  //                      "T_tW"
-////  beginRange[8]  =   1; endRange[8]  =   1;  //                    "Tbar_s"
-////  beginRange[9]  =   1; endRange[9]  =   1;  //                    "Tbar_t"
-////  beginRange[10] =   1; endRange[10] =   1;  //                   "Tbar_tW"
-////  beginRange[11] =   1; endRange[11] =   1;  //              "DYJets10to50"
-////  beginRange[12] =   1; endRange[12] =  85;  //      "DYJets_MIX_UNFOLDING" 
-////  beginRange[13] =   1; endRange[13] = 239;  //    "WJetsALL_MIX_UNFOLDING"
   beginRange[0]  =   1; endRange[0]  =  58;  //                      "Data" 
   beginRange[1]  =   1; endRange[1]  =   1;  //                    "TTJets"
   beginRange[2]  =   1; endRange[2]  =   1;  //                        "ZZ"
